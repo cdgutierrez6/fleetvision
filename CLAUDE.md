@@ -77,13 +77,13 @@ fleetvision/
 
 | Servicio | Puerto host |
 |---------|------------|
-| PostgreSQL | 5432 |
-| TimescaleDB | 5433 |
+| PostgreSQL | 5434 (5432 ocupado por ai-workflow-hub) |
+| TimescaleDB | 5435 (5433 ocupado por sap-triage-db) |
 | Kafka broker 1 | 9092 |
 | Kafka broker 2 | 9093 |
 | Kafka broker 3 | 9094 |
 | Schema Registry | 8081 |
-| Redis | 6379 |
+| Redis | 6380 (6379 ocupado por ai-workflow-hub) |
 | Jaeger UI | 16686 |
 | OTLP gRPC | 4317 |
 | OTLP HTTP | 4318 |

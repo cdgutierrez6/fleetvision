@@ -47,7 +47,7 @@ services:
       start_period: 20s
 
   timescaledb:
-    image: timescale/timescaledb-ha:pg16-latest
+    image: timescale/timescaledb-ha:pg16-ts2.27
     container_name: fv-timescaledb
     restart: unless-stopped
     ports:
@@ -238,69 +238,10 @@ services:
         condition: service_healthy
     networks:
       - fv-net
-    entrypoint: ["/bin/bash", "-c"]
-    command: |
-      "
-      echo '--- Creando topics FleetVision ---'
-
-      # Telemetría (alta throughput — 12 particiones)
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic telemetry.raw \
-        --partitions 12 --replication-factor 3
-
-      # DLQ de telemetría
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic telemetry.raw.dlq \
-        --partitions 3 --replication-factor 3
-
-      # Geofencing
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic geofence.violation \
-        --partitions 3 --replication-factor 3
-
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic geofence.violation.dlq \
-        --partitions 1 --replication-factor 3
-
-      # Seguridad vial
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic driver.behavior.alert \
-        --partitions 3 --replication-factor 3
-
-      # Mantenimiento
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic maintenance.scheduled \
-        --partitions 3 --replication-factor 3
-
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic vehicle.alert \
-        --partitions 3 --replication-factor 3
-
-      # Dominio de flota
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic vehicle.created \
-        --partitions 3 --replication-factor 3
-
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic vehicle.updated \
-        --partitions 3 --replication-factor 3
-
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic geofence.created \
-        --partitions 1 --replication-factor 3
-
-      # SaaS (baja frecuencia)
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic tenant.provisioned \
-        --partitions 1 --replication-factor 3
-
-      kafka-topics --bootstrap-server kafka-1:19092 \
-        --create --if-not-exists --topic billing.subscription.changed \
-        --partitions 1 --replication-factor 3
-
-      echo '--- Topics creados ---'
-      kafka-topics --bootstrap-server kafka-1:19092 --list
-      "
+    volumes:
+      - ./infra/scripts/kafka-init.sh:/kafka-init.sh:ro
+    entrypoint: ["/bin/bash", "/kafka-init.sh"]
+    command: []
     restart: "no"
 
   # ──────────────────────────────────────────────────────────
