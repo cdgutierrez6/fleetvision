@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package fleetvision.telemetry;
+
+import "common.proto";
+
+option csharp_namespace = "FleetVision.Proto.Telemetry";
+
+// Mensaje principal de telemetría — enviado por cada dispositivo GPS/OBD2
+message TelemetryPing {
+  string device_id    = 1;  // ID único del dispositivo (mapeado a vehicle)
+  string tenant_id    = 2;  // Propagado por el ingestion service
+  string vehicle_id   = 3;  // Resuelto por device_id lookup en Fleet service
+  int64  timestamp_ms = 4;  // Unix ms del dispositivo (no del servidor)
+
+  fleetvision.common.GeoPoint location = 5;
+
+  float  speed_kmh    = 6;
+  float  heading_deg  = 7;   // 0-360 grados
+  float  altitude_m   = 8;
+  float  fuel_pct     = 9;   // 0-100
+  float  odometer_km  = 10;
+  bool   engine_on    = 11;
+
+  repeated string obd2_codes = 12;  // Ej: ["P0300", "P0171"]
+
+  // Payload extendido libre — para sensores adicionales por hardware
+  map<string, string> extra = 13;
+}
+
+// Stream de pings (para gRPC bidireccional)
+message TelemetryBatch {
+  repeated TelemetryPing pings = 1;
+}
+
+// Respuesta del servidor al recibir pings
+message IngestResponse {
+  int32  accepted  = 1;
+  int32  rejected  = 2;
+  string message   = 3;
+}
+
+// Servicio gRPC de ingesta de telemetría
+service TelemetryIngestionService {
+  // Stream de pings desde un dispositivo
+  rpc StreamPings(stream TelemetryPing) returns (IngestResponse);
+
+  // Batch para dispositivos que no soportan stream
+  rpc IngestBatch(TelemetryBatch) returns (IngestResponse);
+}

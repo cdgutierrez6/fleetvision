@@ -1,0 +1,10 @@
+# Normalizar line endings en el repo (LF) independiente del OS
+* text=auto eol=lf
+
+# Binarios — no tocar line endings
+*.png binary
+*.jpg binary
+*.ico binary
+*.zip binary
+*.pfx binary
+*.p12 binary

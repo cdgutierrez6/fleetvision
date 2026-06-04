@@ -1,0 +1,78 @@
+# ─── Environment & Secrets ───────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ─── Node.js ─────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+dist/
+build/
+.next/
+out/
+.nuxt/
+.cache/
+
+# ─── .NET / C# ───────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.ncrunchproject
+TestResults/
+*.coverage
+*.coveragexml
+
+# ─── Docker ──────────────────────────────────────────────────
+# No ignorar docker-compose.dev.yml ni docker-compose.services.yml
+# pero sí los overrides locales
+docker-compose.override.yml
+
+# ─── IDEs ────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+.vscode/launch.json
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+*.logs
+
+# ─── Test artifacts ──────────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# ─── Nx ──────────────────────────────────────────────────────
+.nx/cache
+.nx/workspace-data
+tmp/
+
+# ─── Azure / IaC ─────────────────────────────────────────────
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform.tfvars
+
+# ─── Kafka data local (si se montaran volúmenes locales) ─────
+kafka-data/
+
+# ─── Protobuf compilados ─────────────────────────────────────
+**/Generated/Protos/

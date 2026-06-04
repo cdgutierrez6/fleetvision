@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package fleetvision.common;
+
+option csharp_namespace = "FleetVision.Proto.Common";
+
+// Timestamp en formato Unix milisegundos
+message Timestamp {
+  int64 unix_ms = 1;
+}
+
+// Coordenada geográfica
+message GeoPoint {
+  double lat = 1;
+  double lng = 2;
+}
+
+// Referencia de tenant para propagación en eventos Kafka
+message TenantRef {
+  string tenant_id = 1;
+}

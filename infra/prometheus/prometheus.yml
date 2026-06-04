@@ -1,0 +1,62 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    project: fleetvision
+    environment: dev
+
+alerting:
+  alertmanagers: []
+
+rule_files: []
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: [localhost:9090]
+
+  # Microservicios .NET 8 (se añaden cuando los servicios estén levantados)
+  - job_name: identity-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: [identity-service:8080]
+
+  - job_name: fleet-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: [fleet-service:8080]
+
+  - job_name: telemetry-ingestion
+    metrics_path: /metrics
+    static_configs:
+      - targets: [telemetry-ingestion:8080]
+
+  - job_name: geofencing-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: [geofencing-service:8080]
+
+  - job_name: reporting-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: [reporting-service:8080]
+
+  - job_name: notifications-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: [notifications-service:8080]
+
+  - job_name: gateway
+    metrics_path: /metrics
+    static_configs:
+      - targets: [gateway:8080]
+
+  # Redis exporter (opcional — añadir contenedor redis-exporter si se necesita)
+  # - job_name: redis
+  #   static_configs:
+  #     - targets: [redis-exporter:9121]
+
+  # Kafka JMX metrics (confluent expone en :9101 si se configura JMX_PORT)
+  # - job_name: kafka
+  #   static_configs:
+  #     - targets: [kafka-1:9101, kafka-2:9101, kafka-3:9101]
