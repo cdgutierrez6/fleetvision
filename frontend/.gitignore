@@ -1,0 +1,11 @@
+# Angular build artifacts
+.angular/cache/
+dist/
+
+# Nx cache
+.nx/cache/
+.nx/workspace-data/
+
+# Node
+node_modules/
+npm-debug.log*
