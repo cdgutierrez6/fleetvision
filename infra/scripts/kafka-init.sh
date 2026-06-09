@@ -22,8 +22,8 @@ kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic te
 kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic telemetry.raw.dlq --partitions 3 --replication-factor 3
 
 # Geofencing
-kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic geofence.violation --partitions 3 --replication-factor 3
-kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic geofence.violation.dlq --partitions 1 --replication-factor 3
+kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic geofencing.violations --partitions 3 --replication-factor 3
+kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic geofencing.violations.dlq --partitions 1 --replication-factor 3
 
 # Seguridad vial
 kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic driver.behavior.alert --partitions 3 --replication-factor 3
@@ -31,7 +31,9 @@ kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic dr
 
 # Mantenimiento
 kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic maintenance.scheduled --partitions 3 --replication-factor 3
+kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic maintenance.scheduled.dlq --partitions 1 --replication-factor 3
 kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic vehicle.alert --partitions 3 --replication-factor 3
+kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic vehicle.alert.dlq --partitions 1 --replication-factor 3
 
 # Dominio de flota
 kafka-topics --bootstrap-server "$BOOTSTRAP" --create --if-not-exists --topic vehicle.created --partitions 3 --replication-factor 3

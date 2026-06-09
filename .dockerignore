@@ -1,0 +1,35 @@
+# Build artifacts
+**/bin/
+**/obj/
+**/publish/
+**/TestResults/
+
+# Secrets and config
+.env
+.env.*
+**/*.user
+**/appsettings.Development.json
+**/appsettings.Local.json
+
+# Source control
+.git/
+.gitignore
+
+# IDE
+.vs/
+.vscode/
+.idea/
+**/*.swp
+**/*.swo
+
+# Frontend (not needed in .NET service builds)
+frontend/
+**/node_modules/
+
+# Docker files themselves (avoid recursive copy)
+**/Dockerfile
+**/.dockerignore
+
+# CI artifacts
+.github/
+infra/

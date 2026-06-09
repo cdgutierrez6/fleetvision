@@ -40,6 +40,33 @@ message IngestResponse {
   string message   = 3;
 }
 
+// Evento publicado a Kafka topic "telemetry.raw" por cada ping aceptado.
+// Consumido por: Geofencing Service, future Maintenance Service, Analytics.
+message VehiclePositionEvent {
+  string vehicle_id       = 1;  // UUID string
+  string tenant_id        = 2;  // UUID string
+  string driver_id        = 3;  // UUID string — vacío si no hay asignación activa
+  int64  timestamp_unix_ms = 4; // Epoch ms del dispositivo (no del servidor)
+
+  double latitude         = 5;
+  double longitude        = 6;
+  float  speed_kmh        = 7;
+  float  heading_deg      = 8;  // 0-359
+
+  float  accuracy_m       = 9;  // Precisión GPS — filtrar > 50m en consumers
+  float  hdop             = 10; // Dilución horizontal — filtrar > 2.0 en consumers
+  int32  satellite_count  = 11;
+
+  float  fuel_pct         = 12; // 0-100 — útil para alertas de combustible
+  bool   engine_on        = 13;
+
+  repeated string obd2_codes = 14; // Ej: ["P0300"] — para Maintenance service
+
+  // Odómetro acumulado del vehículo en km. Sentinel -1 = no reportado.
+  // Consumido por: Predictive Maintenance service (reglas de mantenimiento).
+  float  odometer_km      = 15;
+}
+
 // Servicio gRPC de ingesta de telemetría
 service TelemetryIngestionService {
   // Stream de pings desde un dispositivo

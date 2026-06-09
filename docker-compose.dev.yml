@@ -355,6 +355,369 @@ services:
     networks:
       - fv-net
 
+  # ──────────────────────────────────────────────────────────
+  # APPLICATION SERVICES
+  # Arrancan solo cuando su profile está activo:
+  #   docker compose --profile identity up -d identity
+  #   docker compose --profile services up -d
+  # ──────────────────────────────────────────────────────────
+
+  identity:
+    build:
+      context: .
+      dockerfile: services/identity/Dockerfile
+      target: runtime
+    container_name: fv-identity
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${IDENTITY_PORT:-5001}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__IdentityDb: "Host=postgres;Port=5432;Database=identity_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  tenant-management:
+    build:
+      context: .
+      dockerfile: services/tenant-management/Dockerfile
+      target: runtime
+    container_name: fv-tenant-management
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${TENANT_MGMT_PORT:-5002}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__TenantManagementDb: "Host=postgres;Port=5432;Database=tenant_management_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      InternalApiKey: ${INTERNAL_API_KEY}
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  fleet-assets:
+    build:
+      context: .
+      dockerfile: services/fleet-assets/Dockerfile
+      target: runtime
+    container_name: fv-fleet-assets
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tenant-management:
+        condition: service_healthy
+    ports:
+      - "${FLEET_ASSETS_PORT:-5004}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__FleetAssetsDb: "Host=postgres;Port=5432;Database=fleet_assets_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      TenantManagement__BaseUrl: http://tenant-management:8080
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  geofencing:
+    build:
+      context: .
+      dockerfile: services/geofencing/Dockerfile
+      target: runtime
+    container_name: fv-geofencing
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tenant-management:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
+    ports:
+      - "${GEOFENCING_PORT:-5006}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__GeofencingDb: "Host=postgres;Port=5432;Database=geofencing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      TenantManagement__BaseUrl: http://tenant-management:8080
+      OpenTelemetry__Endpoint: http://jaeger:4317
+      # Kafka consumer — telemetry.raw → EvaluateTelemetryEventCommand
+      Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ──────────────────────────────────────────────────────────
+  # TELEMETRY INGESTION — gRPC + TimescaleDB + Kafka Outbox
+  # ──────────────────────────────────────────────────────────
+  # Los dispositivos IoT conectan directamente a este servicio
+  # (no pasan por el gateway). Puerto 5005 expuesto para gRPC.
+
+  telemetry:
+    build:
+      context: .
+      dockerfile: services/telemetry/Dockerfile
+      target: runtime
+    container_name: fv-telemetry
+    restart: unless-stopped
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+    ports:
+      - "${TELEMETRY_PORT:-5005}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__TelemetryDb: "Host=timescaledb;Port=5432;Database=${TIMESCALE_DB:-telemetry_db};Username=${TIMESCALE_USER:-telemetry_user};Password=${TIMESCALE_PASSWORD}"
+      ConnectionStrings__Redis: "redis:6379,password=${REDIS_PASSWORD}"
+      Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+      Kafka__SchemaRegistryUrl: "http://schema-registry:8081"
+      Kafka__SchemaId: "1"
+      Identity__Authority: "http://identity:8080"
+      Otel__Endpoint: "http://jaeger:4317"
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+
+  billing:
+    build:
+      context: .
+      dockerfile: services/billing/Dockerfile
+      target: runtime
+    container_name: fv-billing
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tenant-management:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+    ports:
+      - "${BILLING_PORT:-5003}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__BillingDb: "Host=postgres;Port=5432;Database=billing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      TenantManagement__BaseUrl: http://tenant-management:8080
+      TenantManagement__InternalApiKey: ${INTERNAL_API_KEY}
+      Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+      Stripe__SecretKey: ${STRIPE_SECRET_KEY:-sk_test_PENDING}
+      Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-whsec_PENDING}
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  predictive-maintenance:
+    build:
+      context: .
+      dockerfile: services/predictive-maintenance/Dockerfile
+      target: runtime
+    container_name: fv-predictive-maintenance
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+    ports:
+      - "${PREDICTIVE_MAINTENANCE_PORT:-5007}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=maintenance_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Redis__ConnectionString: "redis:6379,password=${REDIS_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  notifications:
+    build:
+      context: .
+      dockerfile: services/notifications/Dockerfile
+      target: runtime
+    container_name: fv-notifications
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+    ports:
+      - "${NOTIFICATIONS_PORT:-5009}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__NotificationsDb: "Host=postgres;Port=5432;Database=notifications_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  reporting:
+    build:
+      context: .
+      dockerfile: services/reporting/Dockerfile
+      target: runtime
+    container_name: fv-reporting
+    restart: unless-stopped
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+    ports:
+      - "${REPORTING_PORT:-5008}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__TelemetryDb: "Host=timescaledb;Port=5432;Database=telemetry_db;Username=${TIMESCALE_USER:-telemetry_user};Password=${TIMESCALE_PASSWORD}"
+      ConnectionStrings__GeofencingDb: "Host=postgres;Port=5432;Database=geofencing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__FleetAssetsDb: "Host=postgres;Port=5432;Database=fleet_assets_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      OpenTelemetry__Endpoint: http://jaeger:4317
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+      target: runtime
+    container_name: fv-gateway
+    restart: unless-stopped
+    depends_on:
+      identity:
+        condition: service_healthy
+      tenant-management:
+        condition: service_healthy
+      fleet-assets:
+        condition: service_healthy
+      geofencing:
+        condition: service_healthy
+      telemetry:
+        condition: service_healthy
+      reporting:
+        condition: service_healthy
+    ports:
+      - "${GATEWAY_PORT:-5000}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__Issuer: fleetvision-identity
+      Jwt__Audience: fleetvision-api
+      OpenTelemetry__Endpoint: http://jaeger:4317
+      Downstream__IdentityUrl: http://identity:8080
+      Downstream__TenantManagementUrl: http://tenant-management:8080
+      Downstream__FleetAssetsUrl: http://fleet-assets:8080
+      Downstream__GeofencingUrl: http://geofencing:8080
+      Downstream__TelemetryUrl: http://telemetry:8080
+      Downstream__PredictiveMaintenanceUrl: http://predictive-maintenance:8080
+      Downstream__NotificationsUrl: http://notifications:8080
+      Downstream__ReportingUrl: http://reporting:8080
+    networks:
+      - fv-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
 # ──────────────────────────────────────────────────────────
 # VOLUMES
 # ──────────────────────────────────────────────────────────

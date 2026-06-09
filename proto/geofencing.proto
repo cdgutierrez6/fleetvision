@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package fleetvision.geofencing;
+
+option csharp_namespace = "FleetVision.Proto.Geofencing";
+
+// Kafka event published to "geofencing.violations" when one or more violations are detected.
+// Consumed by: Notifications Service (SignalR push), future Analytics Service.
+// Partition key: vehicle_id — ensures ordering per vehicle.
+message ViolationDetectedEvent {
+  string id               = 1;  // UUID of GeofenceViolation record
+  string tenant_id        = 2;  // UUID — SignalR group: tenant:{tenant_id}
+  string vehicle_id       = 3;  // UUID
+  string driver_id        = 4;  // UUID — empty string if no active driver assignment
+  string geofence_id      = 5;  // UUID
+  string geofence_name    = 6;  // Display name for dashboard alert
+  string violation_type   = 7;  // ZoneEntered | ZoneExited | SpeedExceeded | OutOfSchedule
+  double latitude         = 8;
+  double longitude        = 9;
+  // Speed fields: -1.0 / -1 when not applicable (non-speed violations)
+  float  actual_speed_kmh   = 10;
+  int32  limit_speed_kmh    = 11;
+  int64  occurred_at_unix_ms = 12;
+}

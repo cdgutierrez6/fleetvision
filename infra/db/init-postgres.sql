@@ -29,8 +29,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ─── Fleet & Assets Service ──────────────────────────────────
 \c postgres
-CREATE DATABASE fleet_db;
-\c fleet_db
+CREATE DATABASE fleet_assets_db;
+\c fleet_assets_db
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS postgis_topology;
