@@ -1,15 +1,19 @@
 import {
-  ChangeDetectionStrategy, Component, OnInit, OnDestroy, effect, inject
+  ChangeDetectionStrategy, Component, OnInit, OnDestroy, effect, inject, computed
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { filter, map } from 'rxjs';
 import {
   AuthStore, VehiclesStore, ViolationsStore, SignalRService
 } from '@fleetvision/shared/data-access';
 import { VIOLATION_TYPE_LABELS } from '@fleetvision/shared/models';
 import { SidenavComponent } from './layout/sidenav.component';
 import { HeaderComponent } from './layout/header.component';
+import { LayoutService } from './core/layout.service';
 
 @Component({
   selector: 'fv-root',
@@ -23,9 +27,10 @@ import { HeaderComponent } from './layout/header.component';
     <mat-sidenav-container class="app-container">
       <mat-sidenav
         class="app-sidenav"
-        mode="side"
-        [opened]="authStore.isAuthenticated()"
-        [disableClose]="true"
+        [mode]="isMobile() ? 'over' : 'side'"
+        [opened]="sidenavOpened()"
+        (closed)="layout.close()"
+        [disableClose]="!isMobile()"
       >
         <fv-sidenav />
       </mat-sidenav>
@@ -49,14 +54,32 @@ import { HeaderComponent } from './layout/header.component';
       background: #F5F7FA; min-height: calc(100vh - 56px);
       overflow-y: auto;
     }
+    @media (max-width: 768px) {
+      .main-content { padding: 16px; }
+    }
+    @media (max-width: 480px) {
+      .main-content { padding: 12px; }
+    }
   `]
 })
 export class AppComponent implements OnInit, OnDestroy {
   authStore = inject(AuthStore);
+  layout = inject(LayoutService);
+  private breakpointObserver = inject(BreakpointObserver);
   private vehiclesStore = inject(VehiclesStore);
   private violationsStore = inject(ViolationsStore);
   private signalR = inject(SignalRService);
   private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
+  isMobile = toSignal(
+    this.breakpointObserver.observe('(max-width: 768px)').pipe(map(s => s.matches)),
+    { initialValue: false }
+  );
+
+  sidenavOpened = computed(() =>
+    this.isMobile() ? this.layout.sidenavOpen() : this.authStore.isAuthenticated()
+  );
 
   constructor() {
     effect(() => {
@@ -80,6 +103,14 @@ export class AppComponent implements OnInit, OnDestroy {
         this.signalR.connect();
         this.vehiclesStore.loadAll();
       }
+    });
+
+    // Close the overlay sidenav on mobile when navigating to a new route
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      takeUntilDestroyed()
+    ).subscribe(() => {
+      if (this.isMobile()) this.layout.close();
     });
   }
 

@@ -79,6 +79,7 @@ import { AuthService, AuthStore } from '@fleetvision/shared/data-access';
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px;
       background: linear-gradient(135deg, #1E3A5F 0%, #0D2240 60%, #00BFA5 100%);
     }
     .login-card {
@@ -118,6 +119,12 @@ import { AuthService, AuthStore } from '@fleetvision/shared/data-access';
     }
     .login-btn:hover:not(:disabled) { background: #2d5080; }
     .login-footer { font-size: 11px; color: #9E9E9E; margin: 16px 0 0; }
+
+    @media (max-width: 480px) {
+      .login-page { align-items: flex-start; padding-top: 10vh; }
+      .login-card { padding: 32px 20px; border-radius: 12px; }
+      .brand-name { font-size: 24px; }
+    }
   `]
 })
 export class LoginComponent implements OnInit {
@@ -133,6 +140,7 @@ export class LoginComponent implements OnInit {
   password = '';
 
   ngOnInit(): void {
+    // Fallback redirect — primary protection is publicGuard on the route
     if (this.authStore.isAuthenticated()) {
       this.router.navigate(['/fleet']);
     }

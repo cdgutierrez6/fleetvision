@@ -9,3 +9,12 @@ export const authGuard: CanActivateFn = () => {
   if (authStore.isAuthenticated()) return true;
   return router.createUrlTree(['/login']);
 };
+
+// Prevents authenticated users from accessing public-only routes (login, register).
+export const publicGuard: CanActivateFn = () => {
+  const authStore = inject(AuthStore);
+  const router = inject(Router);
+
+  if (!authStore.isAuthenticated()) return true;
+  return router.createUrlTree(['/fleet']);
+};

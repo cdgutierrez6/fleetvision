@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/native-federation';
-import { authGuard } from './core/auth.guard';
+import { authGuard, publicGuard } from './core/auth.guard';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthCallbackComponent } from './pages/auth-callback/auth-callback.component';
 
 export const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [publicGuard] },
   { path: 'auth/callback', component: AuthCallbackComponent },
   {
     path: '',

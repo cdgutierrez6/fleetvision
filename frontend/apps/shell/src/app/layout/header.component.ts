@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthStore, AuthService, ViolationsStore } from '@fleetvision/shared/data-access';
+import { LayoutService } from '../core/layout.service';
 
 @Component({
   selector: 'fv-header',
@@ -15,6 +16,9 @@ import { AuthStore, AuthService, ViolationsStore } from '@fleetvision/shared/dat
   template: `
     <header class="header">
       <div class="header-left">
+        <button mat-icon-button class="hamburger" (click)="layout.toggle()" aria-label="Abrir menú">
+          <mat-icon>menu</mat-icon>
+        </button>
         <div class="connection-status" [class.connected]="violationsStore.isConnected()">
           <span class="status-dot"></span>
           <span class="status-text">
@@ -56,7 +60,9 @@ import { AuthStore, AuthService, ViolationsStore } from '@fleetvision/shared/dat
       padding: 0 24px;
       position: sticky; top: 0; z-index: 100;
     }
+    .header-left { display: flex; align-items: center; gap: 4px; }
     .header-right { display: flex; align-items: center; gap: 16px; }
+    .hamburger { display: none; color: #1E3A5F; }
     .connection-status {
       display: flex; align-items: center; gap: 6px;
       font-size: 12px; color: #9E9E9E;
@@ -83,11 +89,21 @@ import { AuthStore, AuthService, ViolationsStore } from '@fleetvision/shared/dat
     .user-menu-header { padding: 12px 16px; }
     .user-menu-name { font-weight: 600; font-size: 14px; }
     .user-menu-tenant { font-size: 12px; color: #6B7280; margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .hamburger { display: inline-flex; }
+      .header { padding: 0 12px; }
+    }
+    @media (max-width: 480px) {
+      .tenant-chip { display: none; }
+      .status-text { display: none; }
+    }
   `]
 })
 export class HeaderComponent {
   authStore = inject(AuthStore);
   violationsStore = inject(ViolationsStore);
+  layout = inject(LayoutService);
   private authService = inject(AuthService);
   private router = inject(Router);
 

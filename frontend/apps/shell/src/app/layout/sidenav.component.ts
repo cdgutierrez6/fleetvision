@@ -3,7 +3,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 import { ViolationsStore } from '@fleetvision/shared/data-access';
+import { LayoutService } from '../core/layout.service';
 
 interface NavItem {
   path: string;
@@ -16,12 +18,15 @@ interface NavItem {
   selector: 'fv-sidenav',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, MatIconModule, MatBadgeModule, MatTooltipModule],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, MatBadgeModule, MatTooltipModule, MatButtonModule],
   template: `
     <div class="sidenav">
       <div class="sidenav-logo">
         <mat-icon class="logo-icon">local_shipping</mat-icon>
         <span class="logo-text">FleetVision</span>
+        <button mat-icon-button class="sidenav-close" (click)="layout.close()" aria-label="Cerrar menú">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
       <nav class="sidenav-nav">
@@ -58,7 +63,8 @@ interface NavItem {
       margin-bottom: 8px;
     }
     .logo-icon { color: #00BFA5; font-size: 28px; width: 28px; height: 28px; }
-    .logo-text { color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+    .logo-text { color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; flex: 1; }
+    .sidenav-close { display: none; color: rgba(255,255,255,.6); margin-left: auto; }
     .sidenav-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 8px; }
     .nav-item {
       display: flex; align-items: center; gap: 12px;
@@ -71,10 +77,15 @@ interface NavItem {
     .nav-item.active { background: rgba(0,191,165,.15); color: #00BFA5; }
     .nav-item mat-icon { font-size: 20px; width: 20px; height: 20px; }
     .nav-label { font-size: 13px; font-weight: 500; }
+
+    @media (max-width: 768px) {
+      .sidenav-close { display: inline-flex; }
+    }
   `]
 })
 export class SidenavComponent {
   violationsStore = inject(ViolationsStore);
+  layout = inject(LayoutService);
 
   navItems: NavItem[] = [
     { path: '/fleet', icon: 'directions_car', label: 'Flota' },
