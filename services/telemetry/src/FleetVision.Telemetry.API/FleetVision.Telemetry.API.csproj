@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FleetVision.Telemetry.Application\FleetVision.Telemetry.Application.csproj" />
+    <ProjectReference Include="..\FleetVision.Telemetry.Infrastructure\FleetVision.Telemetry.Infrastructure.csproj" />
+    <!-- gRPC server + reflection (grpcurl en dev) -->
+    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.66.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
+    <PackageReference Include="Grpc.Tools" Version="2.66.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!-- JWT Bearer auth -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+    <!-- Serilog -->
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <!-- OTel -->
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
+    <!-- Health checks -->
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.2" />
+    <!-- MediatR validation pipeline -->
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+  </ItemGroup>
+  <!-- Proto files desde la carpeta compartida en el monorepo -->
+  <ItemGroup>
+    <Protobuf Include="..\..\..\..\proto\telemetry.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\..\..\proto\common.proto"    GrpcServices="None" />
+  </ItemGroup>
+</Project>

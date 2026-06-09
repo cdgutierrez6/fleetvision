@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FleetVision.Telemetry.Application\FleetVision.Telemetry.Application.csproj" />
+    <!-- TimescaleDB via Npgsql directo (sin EF Core — hypertable requiere raw SQL) -->
+    <PackageReference Include="Npgsql" Version="8.0.6" />
+    <!-- Kafka producer -->
+    <PackageReference Include="Confluent.Kafka" Version="2.6.1" />
+    <!-- Proto serialization para VehiclePositionEvent en OutboxPublisher -->
+    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
+    <PackageReference Include="Grpc.Tools" Version="2.66.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!-- Redis cache -->
+    <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
+    <!-- BackgroundService (KafkaRelayWorker) -->
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    <!-- OTel tracing -->
+    <PackageReference Include="OpenTelemetry" Version="1.12.0" />
+  </ItemGroup>
+  <!-- Proto files — generados solo para serialización (sin servidor gRPC) -->
+  <ItemGroup>
+    <Protobuf Include="..\..\..\..\proto\telemetry.proto" GrpcServices="None" />
+    <Protobuf Include="..\..\..\..\proto\common.proto"    GrpcServices="None" />
+  </ItemGroup>
+</Project>
