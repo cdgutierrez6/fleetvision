@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- SignalR is part of the ASP.NET Core shared framework — no separate NuGet needed -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka"                           Version="2.6.1"  />
+    <PackageReference Include="Google.Protobuf"                           Version="3.29.3" />
+    <PackageReference Include="Grpc.Tools"                                Version="2.66.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1"  />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\..\..\proto\geofencing.proto" GrpcServices="None" />
+    <Protobuf Include="..\..\..\..\proto\common.proto"     GrpcServices="None" />
+  </ItemGroup>
+</Project>
