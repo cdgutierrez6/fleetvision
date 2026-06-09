@@ -1,4 +1,4 @@
-name: CI — Identity
+name: CI - Identity
 
 on:
   workflow_dispatch:
@@ -22,4 +22,7 @@ jobs:
       service-name: identity
       service-path: identity
       api-project: services/identity/src/FleetVision.Identity.API/FleetVision.Identity.API.csproj
-      has-tests: false
+      has-tests: true
+      test-paths: >-
+        services/identity/tests/FleetVision.Identity.Application.Tests
+        services/identity/tests/FleetVision.Identity.Domain.Tests

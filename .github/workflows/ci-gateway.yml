@@ -1,4 +1,4 @@
-name: CI — Gateway
+name: CI - Gateway
 
 on:
   workflow_dispatch:
@@ -22,4 +22,5 @@ jobs:
       service-name: gateway
       service-path: gateway
       api-project: services/gateway/src/FleetVision.Gateway/FleetVision.Gateway.csproj
-      has-tests: false
+      has-tests: true
+      test-paths: services/gateway/tests/FleetVision.Gateway.Tests

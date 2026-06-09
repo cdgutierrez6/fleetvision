@@ -1,4 +1,4 @@
-name: CI — Fleet Assets
+name: CI - Fleet Assets
 
 on:
   workflow_dispatch:
@@ -22,4 +22,7 @@ jobs:
       service-name: fleet-assets
       service-path: fleet-assets
       api-project: services/fleet-assets/src/FleetVision.FleetAssets.API/FleetVision.FleetAssets.API.csproj
-      has-tests: false
+      has-tests: true
+      test-paths: >-
+        services/fleet-assets/tests/FleetVision.FleetAssets.Application.Tests
+        services/fleet-assets/tests/FleetVision.FleetAssets.Domain.Tests

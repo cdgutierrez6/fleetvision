@@ -28,7 +28,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build & Test — ${{ inputs.service-name }}
+    name: Build & Test - ${{ inputs.service-name }}
     runs-on: ubuntu-latest
     concurrency:
       group: ci-${{ inputs.service-name }}-${{ github.ref }}
@@ -65,25 +65,27 @@ jobs:
               --logger "console;verbosity=minimal"
           done
 
-      - name: Quality gate (line coverage ≥ 70%)
+      - name: Quality gate (line coverage >= 70%)
         if: inputs.has-tests
         run: |
-          python3 - <<'PYEOF'
+          python3 -c "
           import xml.etree.ElementTree as ET, glob, sys
-          files = glob.glob("TestResults/**/coverage.cobertura.xml", recursive=True)
+          files = glob.glob('TestResults/**/coverage.cobertura.xml', recursive=True)
           if not files:
-              print("No coverage files found — check coverlet.collector is installed")
+              print('No coverage files found - check coverlet.collector is installed')
               sys.exit(1)
-          rates = [float(ET.parse(f).getroot().get("line-rate", 0)) for f in files]
+          rates = [float(ET.parse(f).getroot().get('line-rate', 0)) for f in files]
           worst = min(rates)
           pct = round(worst * 100, 1)
           passed = worst >= 0.70
-          print(f"{'✅' if passed else '❌'} Worst project coverage: {pct}% {'≥' if passed else '<'} 70% (threshold)")
+          status = 'PASSED' if passed else 'FAILED'
+          cmp = '>=' if passed else '<'
+          print(f'{status} Worst project coverage: {pct}% {cmp} 70% (threshold)')
           sys.exit(0 if passed else 1)
-          PYEOF
+          "
 
   docker:
-    name: Docker — ${{ inputs.service-name }}
+    name: Docker - ${{ inputs.service-name }}
     needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
@@ -122,16 +124,16 @@ jobs:
           context: .
           file: services/${{ inputs.service-path }}/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ inputs.service-name }}
           cache-to: type=gha,mode=max,scope=${{ inputs.service-name }}
 
       - name: Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ github.event_name == 'pull_request' && steps.build.outputs.imageid || fromJSON(steps.meta.outputs.json).tags[0] }}
+          image-ref: ${{ steps.build.outputs.imageid }}
           format: table
           exit-code: '0'
           severity: CRITICAL,HIGH

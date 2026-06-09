@@ -1,4 +1,4 @@
-name: CI — Tenant Management
+name: CI - Tenant Management
 
 on:
   workflow_dispatch:
@@ -22,4 +22,7 @@ jobs:
       service-name: tenant-management
       service-path: tenant-management
       api-project: services/tenant-management/src/FleetVision.TenantManagement.API/FleetVision.TenantManagement.API.csproj
-      has-tests: false
+      has-tests: true
+      test-paths: >-
+        services/tenant-management/tests/FleetVision.TenantManagement.Application.Tests
+        services/tenant-management/tests/FleetVision.TenantManagement.Domain.Tests
