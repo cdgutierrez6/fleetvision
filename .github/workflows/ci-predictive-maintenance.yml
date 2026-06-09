@@ -1,0 +1,30 @@
+name: CI — Predictive Maintenance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/predictive-maintenance/**'
+      - 'proto/**'
+      - '.github/workflows/ci-predictive-maintenance.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/predictive-maintenance/**'
+      - 'proto/**'
+      - '.github/workflows/ci-predictive-maintenance.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: predictive-maintenance
+      service-path: predictive-maintenance
+      api-project: services/predictive-maintenance/src/FleetVision.PredictiveMaintenance.API/FleetVision.PredictiveMaintenance.API.csproj
+      has-tests: true
+      test-paths: >-
+        services/predictive-maintenance/tests/FleetVision.PredictiveMaintenance.Domain.Tests
+        services/predictive-maintenance/tests/FleetVision.PredictiveMaintenance.Application.Tests

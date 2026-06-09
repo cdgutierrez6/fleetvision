@@ -1,0 +1,27 @@
+name: CI — Reporting
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/reporting/**'
+      - '.github/workflows/ci-reporting.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/reporting/**'
+      - '.github/workflows/ci-reporting.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: reporting
+      service-path: reporting
+      api-project: services/reporting/src/FleetVision.Reporting.API/FleetVision.Reporting.API.csproj
+      has-tests: true
+      test-paths: >-
+        services/reporting/tests/FleetVision.Reporting.Application.Tests

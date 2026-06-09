@@ -1,0 +1,2 @@
+# Workflow definitions require explicit review — prevents secret exfiltration via PR
+.github/workflows/ @cdgutierrez6

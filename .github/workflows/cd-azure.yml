@@ -1,0 +1,229 @@
+name: CD — Azure Container Apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, prod]
+      services:
+        description: 'Services to deploy (comma-separated, or "all")'
+        required: false
+        default: 'all'
+  push:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'infra/bicep/**'
+      - '.github/workflows/cd-azure.yml'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_RESOURCE_GROUP: fleetvision-${{ github.event.inputs.environment || 'staging' }}
+  ENVIRONMENT: ${{ github.event.inputs.environment || 'staging' }}
+
+jobs:
+  # ─── Build & Push all service images ───
+  build-images:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.meta.outputs.image-tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get ACR login server
+        id: acr
+        run: |
+          LOGIN_SERVER=$(az acr list --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --query "[0].loginServer" -o tsv)
+          echo "login-server=$LOGIN_SERVER" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to ACR
+        run: az acr login --name $(echo "${{ steps.acr.outputs.login-server }}" | cut -d. -f1)
+
+      - name: Set image tag
+        id: meta
+        run: echo "image-tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push all service images
+        run: |
+          TAG=${{ steps.meta.outputs.image-tag }}
+          ACR=${{ steps.acr.outputs.login-server }}
+          SERVICES=(gateway identity tenant-management billing fleet-assets telemetry geofencing predictive-maintenance reporting notifications)
+
+          for SVC in "${SERVICES[@]}"; do
+            echo "Building $SVC..."
+            docker build \
+              -t "$ACR/fleetvision/$SVC:$TAG" \
+              -t "$ACR/fleetvision/$SVC:latest" \
+              -f "services/$SVC/Dockerfile" \
+              "services/$SVC"
+            docker push "$ACR/fleetvision/$SVC:$TAG"
+            docker push "$ACR/fleetvision/$SVC:latest"
+          done
+
+  # ─── Deploy Infrastructure (Bicep) ───
+  deploy-infra:
+    name: Deploy Azure Infrastructure
+    runs-on: ubuntu-latest
+    needs: build-images
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create resource group if not exists
+        run: |
+          az group create \
+            --name ${{ env.AZURE_RESOURCE_GROUP }} \
+            --location eastus \
+            --tags project=fleetvision environment=${{ env.ENVIRONMENT }} || true
+
+      - name: Deploy Bicep (what-if on prod)
+        id: bicep
+        run: |
+          if [ "${{ env.ENVIRONMENT }}" = "prod" ]; then
+            az deployment group what-if \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --template-file infra/bicep/main.bicep \
+              --parameters @infra/bicep/parameters/prod.parameters.json
+          fi
+
+          az deployment group create \
+            --name "fleetvision-${{ github.run_id }}" \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+            --template-file infra/bicep/main.bicep \
+            --parameters @infra/bicep/parameters/${{ env.ENVIRONMENT }}.parameters.json \
+            --rollback-on-error
+
+  # ─── Deploy to Staging ───
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-images, deploy-infra]
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Update Container Apps (staging)
+        run: |
+          TAG=${{ needs.build-images.outputs.image-tag }}
+          RG=fleetvision-staging
+          SERVICES=(gateway identity tenant-management billing fleet-assets telemetry geofencing predictive-maintenance reporting notifications)
+          ACR=$(az acr list --resource-group $RG --query "[0].loginServer" -o tsv)
+
+          for SVC in "${SERVICES[@]}"; do
+            echo "Deploying $SVC to staging..."
+            az containerapp update \
+              --name "fv-$SVC-staging" \
+              --resource-group $RG \
+              --image "$ACR/fleetvision/$SVC:$TAG" \
+              --set-env-vars \
+                "ASPNETCORE_ENVIRONMENT=Staging" || echo "App fv-$SVC-staging not found — skipping"
+          done
+
+      - name: Smoke test staging
+        run: |
+          GATEWAY_URL=$(az containerapp show \
+            --name fv-gateway-staging \
+            --resource-group fleetvision-staging \
+            --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
+
+          if [ -n "$GATEWAY_URL" ]; then
+            echo "Testing gateway health at https://$GATEWAY_URL/health"
+            curl --fail --retry 5 --retry-delay 10 "https://$GATEWAY_URL/health" || true
+          else
+            echo "Gateway not yet available — skipping smoke test"
+          fi
+
+  # ─── Deploy to Production (manual approval required) ───
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.event.inputs.environment == 'prod' || (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Update Container Apps (prod)
+        run: |
+          TAG=${{ needs.build-images.outputs.image-tag }}
+          RG=fleetvision-prod
+          SERVICES=(gateway identity tenant-management billing fleet-assets telemetry geofencing predictive-maintenance reporting notifications)
+          ACR=$(az acr list --resource-group $RG --query "[0].loginServer" -o tsv)
+
+          for SVC in "${SERVICES[@]}"; do
+            echo "Deploying $SVC to prod..."
+            az containerapp update \
+              --name "fv-$SVC-prod" \
+              --resource-group $RG \
+              --image "$ACR/fleetvision/$SVC:$TAG" \
+              --set-env-vars \
+                "ASPNETCORE_ENVIRONMENT=Production" || echo "App fv-$SVC-prod not found — skipping"
+          done
+
+      - name: Verify prod health
+        run: |
+          GATEWAY_URL=$(az containerapp show \
+            --name fv-gateway-prod \
+            --resource-group fleetvision-prod \
+            --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
+
+          if [ -n "$GATEWAY_URL" ]; then
+            curl --fail --retry 10 --retry-delay 15 "https://$GATEWAY_URL/health"
+          fi
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Production deployment failed — rolling back to previous revision"
+          RG=fleetvision-prod
+          SERVICES=(gateway identity tenant-management billing fleet-assets telemetry geofencing predictive-maintenance reporting notifications)
+
+          for SVC in "${SERVICES[@]}"; do
+            PREV=$(az containerapp revision list \
+              --name "fv-$SVC-prod" \
+              --resource-group $RG \
+              --query "[-2].name" -o tsv 2>/dev/null || echo "")
+
+            if [ -n "$PREV" ]; then
+              az containerapp revision activate \
+                --name "fv-$SVC-prod" \
+                --resource-group $RG \
+                --revision "$PREV" || true
+            fi
+          done

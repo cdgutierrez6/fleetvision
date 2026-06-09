@@ -1,0 +1,29 @@
+name: CI — Billing
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/billing/**'
+      - '.github/workflows/ci-billing.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/billing/**'
+      - '.github/workflows/ci-billing.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: billing
+      service-path: billing
+      api-project: services/billing/src/FleetVision.Billing.API/FleetVision.Billing.API.csproj
+      has-tests: true
+      test-paths: >-
+        services/billing/tests/FleetVision.Billing.Domain.Tests
+        services/billing/tests/FleetVision.Billing.Application.Tests
+        services/billing/tests/FleetVision.Billing.API.Tests

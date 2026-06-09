@@ -1,0 +1,25 @@
+name: CI — Gateway
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/gateway/**'
+      - '.github/workflows/ci-gateway.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/gateway/**'
+      - '.github/workflows/ci-gateway.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: gateway
+      service-path: gateway
+      api-project: services/gateway/src/FleetVision.Gateway/FleetVision.Gateway.csproj
+      has-tests: false

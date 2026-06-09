@@ -1,0 +1,25 @@
+name: CI — Tenant Management
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/tenant-management/**'
+      - '.github/workflows/ci-tenant-management.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/tenant-management/**'
+      - '.github/workflows/ci-tenant-management.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: tenant-management
+      service-path: tenant-management
+      api-project: services/tenant-management/src/FleetVision.TenantManagement.API/FleetVision.TenantManagement.API.csproj
+      has-tests: false

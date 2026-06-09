@@ -1,0 +1,30 @@
+name: CI — Geofencing
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/geofencing/**'
+      - 'proto/**'
+      - '.github/workflows/ci-geofencing.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/geofencing/**'
+      - 'proto/**'
+      - '.github/workflows/ci-geofencing.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: geofencing
+      service-path: geofencing
+      api-project: services/geofencing/src/FleetVision.Geofencing.API/FleetVision.Geofencing.API.csproj
+      has-tests: true
+      test-paths: >-
+        services/geofencing/tests/FleetVision.Geofencing.Domain.Tests
+        services/geofencing/tests/FleetVision.Geofencing.Application.Tests

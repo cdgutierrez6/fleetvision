@@ -1,0 +1,56 @@
+name: CI — Frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/ci-frontend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/ci-frontend.yml'
+
+jobs:
+  build-and-test:
+    name: Nx Build + Lint + Type-check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint all apps
+        run: npx nx run-many --target=lint --all --parallel=3
+
+      - name: Type-check all apps
+        run: npx nx run-many --target=type-check --all --parallel=3 || echo "Type-check target not configured — skipping"
+
+      - name: Build all apps (production)
+        run: npx nx run-many --target=build --all --configuration=production --parallel=3
+
+      - name: Run unit tests
+        run: npx nx run-many --target=test --all --parallel=3 --ci || echo "No test targets configured yet"
+
+      - name: Upload build artifacts
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 7

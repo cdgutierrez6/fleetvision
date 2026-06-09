@@ -1,0 +1,30 @@
+name: CI — Telemetry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/telemetry/**'
+      - 'proto/**'
+      - '.github/workflows/ci-telemetry.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/telemetry/**'
+      - 'proto/**'
+      - '.github/workflows/ci-telemetry.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: telemetry
+      service-path: telemetry
+      api-project: services/telemetry/src/FleetVision.Telemetry.API/FleetVision.Telemetry.API.csproj
+      has-tests: true
+      test-paths: >-
+        services/telemetry/tests/FleetVision.Telemetry.Domain.Tests
+        services/telemetry/tests/FleetVision.Telemetry.Application.Tests

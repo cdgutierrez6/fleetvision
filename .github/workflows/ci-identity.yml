@@ -1,0 +1,25 @@
+name: CI — Identity
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/identity/**'
+      - '.github/workflows/ci-identity.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/identity/**'
+      - '.github/workflows/ci-identity.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: identity
+      service-path: identity
+      api-project: services/identity/src/FleetVision.Identity.API/FleetVision.Identity.API.csproj
+      has-tests: false

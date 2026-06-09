@@ -1,0 +1,25 @@
+name: CI — Fleet Assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'services/fleet-assets/**'
+      - '.github/workflows/ci-fleet-assets.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/fleet-assets/**'
+      - '.github/workflows/ci-fleet-assets.yml'
+      - '.github/workflows/_ci-dotnet.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_ci-dotnet.yml
+    with:
+      service-name: fleet-assets
+      service-path: fleet-assets
+      api-project: services/fleet-assets/src/FleetVision.FleetAssets.API/FleetVision.FleetAssets.API.csproj
+      has-tests: false
