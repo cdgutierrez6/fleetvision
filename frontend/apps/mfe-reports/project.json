@@ -1,0 +1,59 @@
+{
+  "name": "mfe-reports",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-reports/src",
+  "prefix": "fv",
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-reports:_build:development",
+        "rebuildDelay": 0
+      },
+      "configurations": {
+        "production": { "target": "mfe-reports:_build:production" },
+        "development": { "target": "mfe-reports:_build:development" }
+      },
+      "defaultConfiguration": "production"
+    },
+    "_build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-reports",
+        "index": "apps/mfe-reports/src/index.html",
+        "browser": "apps/mfe-reports/src/main.ts",
+        "tsConfig": "apps/mfe-reports/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [],
+        "styles": [],
+        "scripts": []
+      },
+      "configurations": {
+        "production": { "outputHashing": "all" },
+        "development": { "optimization": false, "sourceMap": true }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-reports:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true
+      }
+    },
+    "serve-original": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": { "buildTarget": "mfe-reports:_build:production" },
+        "development": { "buildTarget": "mfe-reports:_build:development" }
+      },
+      "defaultConfiguration": "development",
+      "options": { "port": 4205 }
+    }
+  },
+  "tags": ["type:app", "scope:mfe-reports"]
+}
+

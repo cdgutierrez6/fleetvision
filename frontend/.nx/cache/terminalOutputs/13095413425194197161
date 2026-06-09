@@ -1,0 +1,48 @@
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader initialized with endpoint /@angular-architects/native-federation:build-notifications
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+[42m[38;5;15m INFO [39m[49m Preparing shared npm packages for the platform browser-shared
+[103m[30m NOTE [39m[49m This only needs to be done once, as results are cached
+[103m[30m NOTE [39m[49m Skip packages you don't want to share in your federation config
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37m[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mmain.js[39m[37m            [2m | [22m[2mmain[22m         [2m | [22m[36m269 bytes[39m[37m[2m | [22m[39m
+[37m[39m
+[37m[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m269 bytes[22m[39m
+[37m[39m
+[37m[1mLazy chunk files[22m   [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mchunk-5SFVZ7PW.js[39m[37m  [2m | [22m[2mbootstrap[22m    [2m | [22m  [36m1.95 kB[39m[37m[2m | [22m[39m
+[37m[39m
+[37mApplication bundle generation complete. [5.937 seconds] - 2026-06-06T23:30:08.667Z[39m
+[37m[39m
+[37mWatch mode enabled. Watching for file changes...[39m
+[37mNOTE: Raw file sizes do not reflect development server per-request transformations.[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4205[22m/[39m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[37m[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mmain.js[39m[37m            [2m | [22m[2mmain[22m         [2m | [22m[36m269 bytes[39m[37m[2m | [22m[39m
+[37m[39m
+[37m[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m269 bytes[22m[39m
+[37m[39m
+[37m[1mLazy chunk files[22m   [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mchunk-5SFVZ7PW.js[39m[37m  [2m | [22m[2mbootstrap[22m    [2m | [22m  [36m1.95 kB[39m[37m[2m | [22m[39m
+[37m[39m
+[37mApplication bundle generation complete. [1.811 seconds] - 2026-06-09T16:37:52.681Z[39m
+[37m[39m
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+[42m[38;5;15m INFO [39m[49m Done!
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[37m[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mmain.js[39m[37m            [2m | [22m[2mmain[22m         [2m | [22m[36m269 bytes[39m[37m[2m | [22m[39m
+[37m[39m
+[37m[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m269 bytes[22m[39m
+[37m[39m
+[37m[1mLazy chunk files[22m   [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[39m
+[37m[32mchunk-5SFVZ7PW.js[39m[37m  [2m | [22m[2mbootstrap[22m    [2m | [22m  [36m1.95 kB[39m[37m[2m | [22m[39m
+[37m[39m
+[37mApplication bundle generation complete. [1.600 seconds] - 2026-06-09T16:38:32.419Z[39m
+[37m[39m
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+[42m[38;5;15m INFO [39m[49m Done!

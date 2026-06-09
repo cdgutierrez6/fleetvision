@@ -1,0 +1,59 @@
+{
+  "name": "mfe-alerts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-alerts/src",
+  "prefix": "fv",
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-alerts:_build:development",
+        "rebuildDelay": 0
+      },
+      "configurations": {
+        "production": { "target": "mfe-alerts:_build:production" },
+        "development": { "target": "mfe-alerts:_build:development" }
+      },
+      "defaultConfiguration": "production"
+    },
+    "_build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-alerts",
+        "index": "apps/mfe-alerts/src/index.html",
+        "browser": "apps/mfe-alerts/src/main.ts",
+        "tsConfig": "apps/mfe-alerts/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [],
+        "styles": [],
+        "scripts": []
+      },
+      "configurations": {
+        "production": { "outputHashing": "all" },
+        "development": { "optimization": false, "sourceMap": true }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-alerts:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true
+      }
+    },
+    "serve-original": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": { "buildTarget": "mfe-alerts:_build:production" },
+        "development": { "buildTarget": "mfe-alerts:_build:development" }
+      },
+      "defaultConfiguration": "development",
+      "options": { "port": 4202 }
+    }
+  },
+  "tags": ["type:app", "scope:mfe-alerts"]
+}
+

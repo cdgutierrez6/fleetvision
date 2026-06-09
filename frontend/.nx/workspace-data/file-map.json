@@ -1,0 +1,1000 @@
+{
+  "version": "6.0",
+  "nxVersion": "21.6.11",
+  "pathMappings": {
+    "@fleetvision/shared/models": [
+      "libs/shared/models/src/index.ts"
+    ],
+    "@fleetvision/shared/ui": [
+      "libs/shared/ui/src/index.ts"
+    ],
+    "@fleetvision/shared/data-access": [
+      "libs/shared/data-access/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".angular/cache/21.2.14/mfe-monitoring/vite/deps/_metadata.json",
+        "hash": "1104611762729109241"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-alerts/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-monitoring/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/vite/deps/_metadata.json",
+        "hash": "18241628981622209104"
+      },
+      {
+        "file": ".nx/cache/run.json",
+        "hash": "18314709392053713448"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-monitoring/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-admin/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-admin/.tsbuildinfo",
+        "hash": "12362686825580401780"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-monitoring/.tsbuildinfo",
+        "hash": "4069765501851152204"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-reports/vite/deps/_metadata.json",
+        "hash": "2266783478991321180"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-fleet/vite/deps/_metadata.json",
+        "hash": "17060751025608413002"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-fleet/.tsbuildinfo",
+        "hash": "15767537327213636071"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "5548554263310112286"
+      },
+      {
+        "file": ".nx/workspace-data/0b8e7137-ff8a-4b48-8c93-3a65ec3e1280.db-wal",
+        "hash": "10749144795512880779"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-billing/vite/deps/_metadata.json",
+        "hash": "17536279092642131074"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/vite/com.chrome.devtools.json",
+        "hash": "10913141687834822685"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "15235683626113972378"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-fleet/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-admin/vite/deps/_metadata.json",
+        "hash": "3085743612948838849"
+      },
+      {
+        "file": ".nx/workspace-data/parsed-lock-file.json",
+        "hash": "13959064845493005794"
+      },
+      {
+        "file": "proxy.conf.json",
+        "hash": "1007087131780925237"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-admin/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-reports/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".nx/workspace-data/file-map.json",
+        "hash": "12452369133444706765"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-admin/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": ".angular/cache/21.2.14/shell/.tsbuildinfo",
+        "hash": "1888775601208819555"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-reports/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-alerts/.tsbuildinfo",
+        "hash": "1184795808303830663"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-fleet/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-alerts/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".nx/workspace-data/lockfile.hash",
+        "hash": "16791246204254873343"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-alerts/vite/deps/_metadata.json",
+        "hash": "14644486870817038328"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-alerts/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": "nx.json",
+        "hash": "15551548939254187112"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-monitoring/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-billing/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-billing/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-fleet/vite/deps/package.json",
+        "hash": "8630294688235076505"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-billing/.tsbuildinfo",
+        "hash": "15514646799894364649"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-reports/.tsbuildinfo",
+        "hash": "16852780653076350425"
+      },
+      {
+        "file": "package.json",
+        "hash": "16503626487686390787"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-billing/vite/deps/@angular-architects_native-federation.js",
+        "hash": "16543984715177025129"
+      },
+      {
+        "file": ".angular/cache/21.2.14/mfe-reports/vite/deps/@angular-architects_native-federation.js.map",
+        "hash": "4717199795092286706"
+      },
+      {
+        "file": ".nx/workspace-data/source-maps.json",
+        "hash": "2902961045854709490"
+      },
+      {
+        "file": ".nx/workspace-data/project-graph.json",
+        "hash": "6070603335946172249"
+      }
+    ],
+    "projectFileMap": {
+      "mfe-monitoring": [
+        {
+          "file": "apps/mfe-monitoring/federation.config.js",
+          "hash": "5248028794630252564",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-monitoring/federation.config.ts",
+          "hash": "11785860133888552020",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-monitoring/project.json",
+          "hash": "11548093401273208292"
+        },
+        {
+          "file": "apps/mfe-monitoring/src/app/map/map.component.ts",
+          "hash": "1163822832989279621",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "npm:@angular/material",
+            "npm:leaflet",
+            "shared-models",
+            "shared-data-access",
+            "shared-ui",
+            [
+              "npm:leaflet",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/mfe-monitoring/src/bootstrap.ts",
+          "hash": "14089014591536050725",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/mfe-monitoring/src/index.html",
+          "hash": "7964235194473895183"
+        },
+        {
+          "file": "apps/mfe-monitoring/src/main.ts",
+          "hash": "636965444893104461",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-monitoring/tsconfig.app.json",
+          "hash": "16060192996479329461"
+        },
+        {
+          "file": "apps/mfe-monitoring/tsconfig.federation.json",
+          "hash": "413733484437936705"
+        },
+        {
+          "file": "apps/mfe-monitoring/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "shell": [
+        {
+          "file": "apps/shell/federation.config.js",
+          "hash": "9322462138227197200",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/shell/federation.config.ts",
+          "hash": "14522011226895657065",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/shell/project.json",
+          "hash": "11339028330929155015"
+        },
+        {
+          "file": "apps/shell/src/app/app.component.ts",
+          "hash": "5958121360045426890",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/material",
+            "shared-data-access",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/app.config.ts",
+          "hash": "5903437627129550561",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/common",
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/app.routes.ts",
+          "hash": "16855432670622254327",
+          "deps": [
+            "npm:@angular/router",
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/core/auth.guard.ts",
+          "hash": "8810966206491206173",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/core/token.interceptor.ts",
+          "hash": "9867673766616294733",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/layout/header.component.ts",
+          "hash": "5858823342730028403",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/material",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/layout/sidenav.component.ts",
+          "hash": "12595833974559995730",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/material",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/pages/auth-callback/auth-callback.component.ts",
+          "hash": "12221131225786730237",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/material",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/app/pages/login/login.component.ts",
+          "hash": "4295144340303017585",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "npm:@angular/material",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/shell/src/bootstrap.ts",
+          "hash": "8014999171530089295",
+          "deps": [
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/shell/src/environments/environment.prod.ts",
+          "hash": "14753756083956175478"
+        },
+        {
+          "file": "apps/shell/src/environments/environment.ts",
+          "hash": "1396435221299340726"
+        },
+        {
+          "file": "apps/shell/src/index.html",
+          "hash": "1014046915369492548"
+        },
+        {
+          "file": "apps/shell/src/main.ts",
+          "hash": "10208982496703204055",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/shell/src/polyfills.ts",
+          "hash": "9619474419422659778",
+          "deps": [
+            "npm:es-module-shims"
+          ]
+        },
+        {
+          "file": "apps/shell/src/styles.scss",
+          "hash": "5851825011950073502"
+        },
+        {
+          "file": "apps/shell/tsconfig.app.json",
+          "hash": "16972924675837458272"
+        },
+        {
+          "file": "apps/shell/tsconfig.federation.json",
+          "hash": "9152192247466663579"
+        },
+        {
+          "file": "apps/shell/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "mfe-admin": [
+        {
+          "file": "apps/mfe-admin/federation.config.js",
+          "hash": "6320985141192374436",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-admin/federation.config.ts",
+          "hash": "12238736559350200725",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-admin/project.json",
+          "hash": "16347269056165210269"
+        },
+        {
+          "file": "apps/mfe-admin/src/app/admin/admin.component.ts",
+          "hash": "16127563431078229771",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/material",
+            "shared-models",
+            "shared-data-access",
+            "shared-ui"
+          ]
+        },
+        {
+          "file": "apps/mfe-admin/src/bootstrap.ts",
+          "hash": "1975268365548099076",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/mfe-admin/src/index.html",
+          "hash": "4706494339763740489"
+        },
+        {
+          "file": "apps/mfe-admin/src/main.ts",
+          "hash": "17691735471316969055",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-admin/tsconfig.app.json",
+          "hash": "16972924675837458272"
+        },
+        {
+          "file": "apps/mfe-admin/tsconfig.federation.json",
+          "hash": "9152192247466663579"
+        },
+        {
+          "file": "apps/mfe-admin/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "shared-data-access": [
+        {
+          "file": "libs/shared/data-access/project.json",
+          "hash": "2161445034615222503"
+        },
+        {
+          "file": "libs/shared/data-access/src/index.ts",
+          "hash": "14273943892248613910"
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/auth/auth.service.ts",
+          "hash": "10346187705247492708",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/auth/auth.store.ts",
+          "hash": "5934372292379509021",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/billing/billing.service.ts",
+          "hash": "14874884194513478674",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/billing/billing.store.ts",
+          "hash": "8797388927445314138",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/geofences/geofences.service.ts",
+          "hash": "11362098803709498979",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/geofences/geofences.store.ts",
+          "hash": "2886574710446976275",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/reporting/reporting.service.ts",
+          "hash": "2888574761601830907",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/reporting/reporting.store.ts",
+          "hash": "10219286923179219346",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/tenants/tenants.service.ts",
+          "hash": "13731424919819837419",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/tenants/tenants.store.ts",
+          "hash": "776571326276319372",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/vehicles/vehicles.service.ts",
+          "hash": "6947540250202840469",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/vehicles/vehicles.store.ts",
+          "hash": "13888793250223870662",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "npm:rxjs",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/violations/signalr.service.ts",
+          "hash": "4759377863379158801",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@microsoft/signalr",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/src/lib/violations/violations.store.ts",
+          "hash": "7476321963236983869",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@ngrx/signals",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/data-access/tsconfig.json",
+          "hash": "8796594043995651934"
+        },
+        {
+          "file": "libs/shared/data-access/tsconfig.lib.json",
+          "hash": "12266419604419827781"
+        }
+      ],
+      "mfe-alerts": [
+        {
+          "file": "apps/mfe-alerts/federation.config.js",
+          "hash": "14109011943237117420",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-alerts/federation.config.ts",
+          "hash": "15766628125380436255",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-alerts/project.json",
+          "hash": "9070750483859560760"
+        },
+        {
+          "file": "apps/mfe-alerts/src/app/feed/feed.component.ts",
+          "hash": "4365241695740508632",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "npm:@angular/forms",
+            "npm:rxjs",
+            "shared-models",
+            "shared-data-access",
+            "shared-ui"
+          ]
+        },
+        {
+          "file": "apps/mfe-alerts/src/bootstrap.ts",
+          "hash": "17066165151935532593",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/mfe-alerts/src/index.html",
+          "hash": "3545185185846242709"
+        },
+        {
+          "file": "apps/mfe-alerts/src/main.ts",
+          "hash": "17376768574774483963",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-alerts/tsconfig.app.json",
+          "hash": "16972924675837458272"
+        },
+        {
+          "file": "apps/mfe-alerts/tsconfig.federation.json",
+          "hash": "9152192247466663579"
+        },
+        {
+          "file": "apps/mfe-alerts/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "mfe-reports": [
+        {
+          "file": "apps/mfe-reports/federation.config.js",
+          "hash": "9104789794477479035",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-reports/federation.config.ts",
+          "hash": "15082101529665875743",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-reports/project.json",
+          "hash": "3116115107162269649"
+        },
+        {
+          "file": "apps/mfe-reports/src/app/reports/reports.component.ts",
+          "hash": "12913664123812298230",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "shared-data-access",
+            "shared-models",
+            "shared-ui"
+          ]
+        },
+        {
+          "file": "apps/mfe-reports/src/bootstrap.ts",
+          "hash": "4993557401906078821",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/mfe-reports/src/index.html",
+          "hash": "17474027403470031447"
+        },
+        {
+          "file": "apps/mfe-reports/src/main.ts",
+          "hash": "11697494202843560015",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-reports/tsconfig.app.json",
+          "hash": "13696083845546006151"
+        },
+        {
+          "file": "apps/mfe-reports/tsconfig.federation.json",
+          "hash": "9875853334148448520"
+        },
+        {
+          "file": "apps/mfe-reports/tsconfig.json",
+          "hash": "10723504110215321986"
+        }
+      ],
+      "shared-models": [
+        {
+          "file": "libs/shared/models/project.json",
+          "hash": "11406271093469434662"
+        },
+        {
+          "file": "libs/shared/models/src/index.ts",
+          "hash": "12903340370742224430"
+        },
+        {
+          "file": "libs/shared/models/src/lib/auth.model.ts",
+          "hash": "9135150164300359340"
+        },
+        {
+          "file": "libs/shared/models/src/lib/billing.model.ts",
+          "hash": "7414605752985471352"
+        },
+        {
+          "file": "libs/shared/models/src/lib/geofence.model.ts",
+          "hash": "8797335349288615993"
+        },
+        {
+          "file": "libs/shared/models/src/lib/tenant.model.ts",
+          "hash": "18321089393960429401"
+        },
+        {
+          "file": "libs/shared/models/src/lib/vehicle.model.ts",
+          "hash": "16222088320020309676"
+        },
+        {
+          "file": "libs/shared/models/src/lib/violation.model.ts",
+          "hash": "16435254672583942138"
+        },
+        {
+          "file": "libs/shared/models/tsconfig.json",
+          "hash": "17145937177867415405"
+        }
+      ],
+      "mfe-billing": [
+        {
+          "file": "apps/mfe-billing/federation.config.js",
+          "hash": "4283687260382236762",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-billing/federation.config.ts",
+          "hash": "8561280359490134191",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-billing/project.json",
+          "hash": "15337142990129980791"
+        },
+        {
+          "file": "apps/mfe-billing/src/app/billing/billing.component.ts",
+          "hash": "7466322737664357684",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "shared-models",
+            "shared-data-access"
+          ]
+        },
+        {
+          "file": "apps/mfe-billing/src/bootstrap.ts",
+          "hash": "4547908788702043054",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/mfe-billing/src/index.html",
+          "hash": "13432110315798891201"
+        },
+        {
+          "file": "apps/mfe-billing/src/main.ts",
+          "hash": "14718011179507307150",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-billing/tsconfig.app.json",
+          "hash": "4918999589305371966"
+        },
+        {
+          "file": "apps/mfe-billing/tsconfig.federation.json",
+          "hash": "16384177540166282211"
+        },
+        {
+          "file": "apps/mfe-billing/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "mfe-fleet": [
+        {
+          "file": "apps/mfe-fleet/federation.config.js",
+          "hash": "2138445654779220599",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-fleet/federation.config.ts",
+          "hash": "11427544392459874396",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-fleet/project.json",
+          "hash": "12406849709260115510"
+        },
+        {
+          "file": "apps/mfe-fleet/src/app/dashboard/dashboard.component.ts",
+          "hash": "11287326090977266138",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "npm:@angular/forms",
+            "shared-models",
+            "shared-data-access",
+            "shared-ui"
+          ]
+        },
+        {
+          "file": "apps/mfe-fleet/src/bootstrap.ts",
+          "hash": "8756118549111208316",
+          "deps": [
+            "npm:@angular/platform-browser",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/mfe-fleet/src/index.html",
+          "hash": "12271446181740701830"
+        },
+        {
+          "file": "apps/mfe-fleet/src/main.ts",
+          "hash": "8203226904046879236",
+          "deps": [
+            "npm:@angular-architects/native-federation"
+          ]
+        },
+        {
+          "file": "apps/mfe-fleet/tsconfig.app.json",
+          "hash": "16972924675837458272"
+        },
+        {
+          "file": "apps/mfe-fleet/tsconfig.federation.json",
+          "hash": "9152192247466663579"
+        },
+        {
+          "file": "apps/mfe-fleet/tsconfig.json",
+          "hash": "14390141282835555768"
+        }
+      ],
+      "shared-ui": [
+        {
+          "file": "libs/shared/ui/project.json",
+          "hash": "10550182488079929370"
+        },
+        {
+          "file": "libs/shared/ui/src/index.ts",
+          "hash": "10964915029091160057"
+        },
+        {
+          "file": "libs/shared/ui/src/lib/kpi-card.component.ts",
+          "hash": "12053755746769585108",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/src/lib/skeleton-loader.component.ts",
+          "hash": "16737978934834861120",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/src/lib/status-badge.component.ts",
+          "hash": "11073667080611835681",
+          "deps": [
+            "npm:@angular/core",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/src/lib/violation-alert.component.ts",
+          "hash": "4010739885297778966",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "shared-models"
+          ]
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.json",
+          "hash": "8796594043995651934"
+        },
+        {
+          "file": "libs/shared/ui/tsconfig.lib.json",
+          "hash": "11803745670290224288"
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "2228655367326185634"
+}

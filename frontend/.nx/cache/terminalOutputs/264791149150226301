@@ -1,0 +1,9 @@
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader initialized with endpoint /@angular-architects/native-federation:build-notifications
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+X [ERROR] File 'apps\mfe-billing\src\app\billing\billing.component.ts' not found in TypeScript compilation. [plugin angular-compiler]
+
+  Files containing Angular metadata ('@Component'/'@Directive'/etc.) must be part of the TypeScript compilation. You can ensure the file is part of the TypeScript program via the 'files' or 'include' property.
+
+[41m[38;5;15m ERRR [39m[49m Error building federation artefacts
+[41m[38;5;15m ERRR [39m[49m Build failed with 1 error:
+error: File 'apps\mfe-billing\src\app\billing\billing.component.ts' not found in TypeScript compilation.

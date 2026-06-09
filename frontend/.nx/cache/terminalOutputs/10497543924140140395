@@ -1,0 +1,38 @@
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader initialized with endpoint /@angular-architects/native-federation:build-notifications
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+▲ [WARNING] NG8011: Node matches the ".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])" slot of the "MatButton" component, but will not be projected into the specific slot because the surrounding @else has more than one node at its root. To project the node in the right slot, you can:
+
+1. Wrap the content of the @else block in an <ng-container/> that matches the ".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])" selector.
+2. Split the content of the @else block across multiple @else blocks such that each one only has a single projectable node at its root.
+3. Remove all content from the @else block, except for the node being projected.
+
+This check can be disabled using the `extendedDiagnostics.checks.controlFlowPreventingContentProjection = "suppress" compiler option.` [plugin angular-compiler]
+
+    apps/shell/src/app/pages/login/login.component.ts:52:12:
+      52 │             <mat-icon>login</mat-icon>
+         ╵             ~~~~~~~~~~
+
+[42m[38;5;15m INFO [39m[49m Preparing shared npm packages for the platform browser-shared
+[103m[30m NOTE [39m[49m This only needs to be done once, as results are cached
+[103m[30m NOTE [39m[49m Skip packages you don't want to share in your federation config
+▲ [WARNING] NG8011: Node matches the ".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])" slot of the "MatButton" component, but will not be projected into the specific slot because the surrounding @else has more than one node at its root. To project the node in the right slot, you can:
+
+1. Wrap the content of the @else block in an <ng-container/> that matches the ".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])" selector.
+2. Split the content of the @else block across multiple @else blocks such that each one only has a single projectable node at its root.
+3. Remove all content from the @else block, except for the node being projected.
+
+This check can be disabled using the `extendedDiagnostics.checks.controlFlowPreventingContentProjection = "suppress" compiler option.` [plugin angular-compiler]
+
+    apps/shell/src/app/pages/login/login.component.ts:52:12:
+      52 │             <mat-icon>login</mat-icon>
+         ╵             ~~~~~~~~~~
+
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader disposed
+
+[0m[7m[1m[31m NX [39m[22m[27m[0m  [31mSchema validation failed with the following errors:[39m
+
+  Data path "" must NOT have additional properties(main).
+Error: Schema validation failed with the following errors:
+  Data path "" must NOT have additional properties(main).
+    at name (C:\Users\ASUS\Documents\claude projects\fleetvision\frontend\node_modules\@angular-devkit\architect\src\architect.js:215:19)
+

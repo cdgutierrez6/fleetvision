@@ -1,0 +1,59 @@
+{
+  "name": "mfe-monitoring",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-monitoring/src",
+  "prefix": "fv",
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-monitoring:_build:development",
+        "rebuildDelay": 0
+      },
+      "configurations": {
+        "production": { "target": "mfe-monitoring:_build:production" },
+        "development": { "target": "mfe-monitoring:_build:development" }
+      },
+      "defaultConfiguration": "production"
+    },
+    "_build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-monitoring",
+        "index": "apps/mfe-monitoring/src/index.html",
+        "browser": "apps/mfe-monitoring/src/main.ts",
+        "tsConfig": "apps/mfe-monitoring/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [],
+        "styles": ["node_modules/leaflet/dist/leaflet.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": { "outputHashing": "all" },
+        "development": { "optimization": false, "sourceMap": true }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-monitoring:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true
+      }
+    },
+    "serve-original": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": { "buildTarget": "mfe-monitoring:_build:production" },
+        "development": { "buildTarget": "mfe-monitoring:_build:development" }
+      },
+      "defaultConfiguration": "development",
+      "options": { "port": 4203 }
+    }
+  },
+  "tags": ["type:app", "scope:mfe-monitoring"]
+}
+

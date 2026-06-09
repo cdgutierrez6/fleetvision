@@ -1,0 +1,59 @@
+{
+  "name": "mfe-admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-admin/src",
+  "prefix": "fv",
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-admin:_build:development",
+        "rebuildDelay": 0
+      },
+      "configurations": {
+        "production": { "target": "mfe-admin:_build:production" },
+        "development": { "target": "mfe-admin:_build:development" }
+      },
+      "defaultConfiguration": "production"
+    },
+    "_build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-admin",
+        "index": "apps/mfe-admin/src/index.html",
+        "browser": "apps/mfe-admin/src/main.ts",
+        "tsConfig": "apps/mfe-admin/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [],
+        "styles": [],
+        "scripts": []
+      },
+      "configurations": {
+        "production": { "outputHashing": "all" },
+        "development": { "optimization": false, "sourceMap": true }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-admin:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true
+      }
+    },
+    "serve-original": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": { "buildTarget": "mfe-admin:_build:production" },
+        "development": { "buildTarget": "mfe-admin:_build:development" }
+      },
+      "defaultConfiguration": "development",
+      "options": { "port": 4204 }
+    }
+  },
+  "tags": ["type:app", "scope:mfe-admin"]
+}
+

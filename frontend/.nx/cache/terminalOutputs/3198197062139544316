@@ -1,0 +1,25 @@
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader initialized with endpoint /@angular-architects/native-federation:build-notifications
+[42m[38;5;15m INFO [39m[49m Building federation artefacts
+▲ [WARNING] NG8113: DatePipe is not used within the template of FeedComponent [plugin angular-compiler]
+
+    apps/mfe-alerts/src/app/feed/feed.component.ts:35:4:
+      35 │     DatePipe,
+         ╵     ~~~~~~~~
+
+[42m[38;5;15m INFO [39m[49m Preparing shared npm packages for the platform browser-shared
+[103m[30m NOTE [39m[49m This only needs to be done once, as results are cached
+[103m[30m NOTE [39m[49m Skip packages you don't want to share in your federation config
+▲ [WARNING] NG8113: DatePipe is not used within the template of FeedComponent [plugin angular-compiler]
+
+    apps/mfe-alerts/src/app/feed/feed.component.ts:35:4:
+      35 │     DatePipe,
+         ╵     ~~~~~~~~
+
+[42m[38;5;15m INFO [39m[49m [Federation SSE] Local reloader disposed
+
+[0m[7m[1m[31m NX [39m[22m[27m[0m  [31mSchema validation failed with the following errors:[39m
+
+  Data path "" must NOT have additional properties(main).
+Pass --verbose to see the stacktrace.
+
+fatal error: 

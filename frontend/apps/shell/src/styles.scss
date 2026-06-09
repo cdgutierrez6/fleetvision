@@ -1,0 +1,65 @@
+@use '@angular/material' as mat;
+
+$fleet-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+  ),
+  typography: (
+    brand-family: 'Inter, sans-serif',
+  ),
+  density: (scale: 0),
+));
+
+html {
+  @include mat.all-component-themes($fleet-theme);
+}
+
+/* CSS custom properties */
+:root {
+  --fv-primary: #1E3A5F;
+  --fv-accent: #00BFA5;
+  --fv-bg: #F5F7FA;
+  --fv-surface: #ffffff;
+  --fv-border: #E0E4EA;
+  --fv-text: #1A2332;
+  --fv-text-muted: #6B7280;
+  --fv-success: #4CAF50;
+  --fv-warning: #FF9800;
+  --fv-inactive: #9E9E9E;
+  --fv-error: #F44336;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--fv-text);
+  background: var(--fv-bg);
+}
+
+/* Violation toast override */
+.violation-snack {
+  background: #1E3A5F !important;
+  color: #fff !important;
+  border-left: 4px solid #F44336;
+}
+.violation-snack .mat-mdc-snack-bar-action { color: #00BFA5 !important; }
+
+/* Material icon alignment fix */
+.mat-icon { vertical-align: middle; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C0C8D0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9E9E9E; }
+
+/* Pulse animation for map markers */
+@keyframes pulse-red {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244,67,54,.5); }
+  50% { transform: scale(1.5); box-shadow: 0 0 0 8px rgba(244,67,54,0); }
+}
