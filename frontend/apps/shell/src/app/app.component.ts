@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy, Component, OnInit, OnDestroy, effect, inject, computed, signal
 } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { filter } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import {
   AuthStore, VehiclesStore, ViolationsStore, SignalRService
 } from '@fleetvision/shared/data-access';
@@ -14,7 +13,7 @@ import { SidenavComponent } from './layout/sidenav.component';
 import { HeaderComponent } from './layout/header.component';
 import { LayoutService } from './core/layout.service';
 
-const MOBILE_BREAKPOINT = '(max-width: 768px)';
+const MOBILE_BP = '(max-width: 768px)';
 
 @Component({
   selector: 'fv-root',
@@ -72,17 +71,16 @@ export class AppComponent implements OnInit, OnDestroy {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  isMobile = signal(window.matchMedia(MOBILE_BREAKPOINT).matches);
-
+  isMobile = signal(window.matchMedia(MOBILE_BP).matches);
   sidenavOpened = computed(() =>
     this.isMobile() ? this.layout.sidenavOpen() : this.authStore.isAuthenticated()
   );
 
-  constructor() {
-    // Keep isMobile signal in sync with viewport changes
-    const mql = window.matchMedia(MOBILE_BREAKPOINT);
-    mql.addEventListener('change', (e) => this.isMobile.set(e.matches));
+  private mobileHandler = (e: MediaQueryListEvent) => this.isMobile.set(e.matches);
+  private mql = window.matchMedia(MOBILE_BP);
+  private routerSub?: Subscription;
 
+  constructor() {
     effect(() => {
       const violation = this.violationsStore.latestViolation();
       if (!violation) return;
@@ -105,18 +103,20 @@ export class AppComponent implements OnInit, OnDestroy {
         this.vehiclesStore.loadAll();
       }
     });
-
-    this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      if (this.isMobile()) this.layout.close();
-    });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.mql.addEventListener('change', this.mobileHandler);
+    this.routerSub = this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.isMobile()) this.layout.close();
+      });
+  }
 
   ngOnDestroy(): void {
     this.signalR.disconnect();
+    this.mql.removeEventListener('change', this.mobileHandler);
+    this.routerSub?.unsubscribe();
   }
 }
