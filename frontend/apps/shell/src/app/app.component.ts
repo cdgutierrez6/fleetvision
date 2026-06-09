@@ -1,12 +1,11 @@
 import {
-  ChangeDetectionStrategy, Component, OnInit, OnDestroy, effect, inject, computed
+  ChangeDetectionStrategy, Component, OnInit, OnDestroy, effect, inject, computed, signal
 } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { filter, map } from 'rxjs';
+import { filter } from 'rxjs';
 import {
   AuthStore, VehiclesStore, ViolationsStore, SignalRService
 } from '@fleetvision/shared/data-access';
@@ -14,6 +13,8 @@ import { VIOLATION_TYPE_LABELS } from '@fleetvision/shared/models';
 import { SidenavComponent } from './layout/sidenav.component';
 import { HeaderComponent } from './layout/header.component';
 import { LayoutService } from './core/layout.service';
+
+const MOBILE_BREAKPOINT = '(max-width: 768px)';
 
 @Component({
   selector: 'fv-root',
@@ -65,23 +66,23 @@ import { LayoutService } from './core/layout.service';
 export class AppComponent implements OnInit, OnDestroy {
   authStore = inject(AuthStore);
   layout = inject(LayoutService);
-  private breakpointObserver = inject(BreakpointObserver);
   private vehiclesStore = inject(VehiclesStore);
   private violationsStore = inject(ViolationsStore);
   private signalR = inject(SignalRService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  isMobile = toSignal(
-    this.breakpointObserver.observe('(max-width: 768px)').pipe(map(s => s.matches)),
-    { initialValue: false }
-  );
+  isMobile = signal(window.matchMedia(MOBILE_BREAKPOINT).matches);
 
   sidenavOpened = computed(() =>
     this.isMobile() ? this.layout.sidenavOpen() : this.authStore.isAuthenticated()
   );
 
   constructor() {
+    // Keep isMobile signal in sync with viewport changes
+    const mql = window.matchMedia(MOBILE_BREAKPOINT);
+    mql.addEventListener('change', (e) => this.isMobile.set(e.matches));
+
     effect(() => {
       const violation = this.violationsStore.latestViolation();
       if (!violation) return;
@@ -105,7 +106,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Close the overlay sidenav on mobile when navigating to a new route
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
       takeUntilDestroyed()
