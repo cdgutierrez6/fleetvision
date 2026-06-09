@@ -64,16 +64,16 @@
 
 | Servicio | Puerto | Descripción |
 |---------|--------|-------------|
-| `identity` | 5001 | Auth, RBAC, JWT, gestión de tenants |
+| `identity` | 5001 | Auth, RBAC, JWT, refresh tokens (OpenIddict) |
 | `tenant-management` | 5002 | Onboarding, planes, límites por plan |
 | `billing` | 5003 | Stripe, suscripciones, webhooks |
-| `fleet` | 5004 | Vehículos, flotas, conductores, geofences |
-| `telemetry-ingestion` | 5005 | gRPC alto throughput, publica `telemetry.raw` |
+| `fleet-assets` | 5004 | Vehículos, flotas, conductores, geofences (PostGIS) |
+| `telemetry` | 5005 | gRPC alto throughput, publica `telemetry.raw` |
 | `geofencing` | 5006 | ST_Contains tiempo real, alertas de zona |
 | `predictive-maintenance` | 5007 | OBD2, km acumulados, alertas de mantenimiento |
-| `reporting` | 5008 | CQRS query model, KPIs, export PDF |
-| `notifications` | 5009 | WebSocket, email, historial de alertas |
-| `gateway` | 5000 | YARP reverse proxy · JWT middleware |
+| `reporting` | 5008 | CQRS query model, KPIs, export PDF (QuestPDF) |
+| `notifications` | 5009 | SignalR WebSocket, alertas real-time por tenant |
+| `gateway` | 5000 | YARP reverse proxy · JWT middleware · security headers |
 
 ---
 
@@ -136,8 +136,8 @@ fleetvision/
 │   ├── identity/                # Clean Architecture: Domain/Application/Infrastructure/API
 │   ├── tenant-management/
 │   ├── billing/
-│   ├── fleet/
-│   ├── telemetry-ingestion/
+│   ├── fleet-assets/
+│   ├── telemetry/
 │   ├── geofencing/
 │   ├── predictive-maintenance/
 │   ├── reporting/
@@ -154,41 +154,39 @@ fleetvision/
 │   │   └── mfe-billing/         # Planes y facturación
 │   └── libs/shared/             # Design system, interceptores, auth
 ├── infra/
-│   ├── db/                      # Scripts SQL de inicialización
+│   ├── db/                      # Scripts SQL de inicialización + reporting views
 │   ├── prometheus/              # prometheus.yml
 │   ├── loki/                    # loki-config.yml
 │   ├── grafana/                 # Datasources y dashboards provisionados
-│   ├── bicep/                   # IaC para Azure
-│   ├── helm/                    # Helm charts por servicio
-│   └── k6/                      # Scripts de load test
+│   ├── bicep/                   # IaC Azure Container Apps
+│   ├── scripts/                 # smoke-test.ps1
+│   └── k6/                      # Load test — ramping 10k pings/s
 ├── proto/                       # Definiciones Protobuf compartidas
-├── .github/workflows/           # CI/CD (1 pipeline por servicio/MFE)
+├── docs/                        # Runbook operativo
+├── .github/workflows/           # CI/CD (1 pipeline por servicio/MFE + cd-azure.yml)
 ├── docker-compose.dev.yml       # Infraestructura de desarrollo
-├── CHECKLIST.md                 # Progreso del proyecto
-└── CLAUDE.md                    # Decisiones técnicas y lecciones
+└── CHECKLIST.md                 # Estado detallado por fase y RFC
 ```
 
 ---
 
-## Development Progress
-
-Ver [`CHECKLIST.md`](CHECKLIST.md) para el estado detallado por fase.
+## Status
 
 | Fase | Descripción | Estado |
 |------|-------------|--------|
-| F0 | Infraestructura base (Docker Compose) | 🟡 En curso |
-| F1 | Identity & Access + API Gateway | ⏳ Pendiente |
-| F2 | Tenant Management + Billing | ⏳ Pendiente |
-| F3 | Fleet & Assets CRUD | ⏳ Pendiente |
-| F4 | Telemetry Ingestion + Kafka | ⏳ Pendiente |
-| F5 | Geofencing & Safety | ⏳ Pendiente |
-| F6 | Predictive Maintenance | ⏳ Pendiente |
-| F7 | Reporting & Analytics | ⏳ Pendiente |
-| F8 | Notifications | ⏳ Pendiente |
-| F9 | Frontend Angular 21 + MFEs | ⏳ Pendiente |
-| F10 | Observabilidad + Resiliencia | ⏳ Pendiente |
-| F11 | CI/CD + Azure | ⏳ Pendiente |
-| F12 | Hardening + Launch | ⏳ Pendiente |
+| F0 | Infraestructura base (Docker Compose, Kafka KRaft, TimescaleDB, PostGIS, Redis, OTel) | ✅ Completo |
+| F1 | Identity & Access + API Gateway (OpenIddict, JWT, RBAC, 34 tests) | ✅ Completo |
+| F2 | Tenant Management + Billing Stripe (outbox, webhooks, 53 tests) | ✅ Completo |
+| F3 | Fleet & Assets CRUD PostGIS (65 tests) | ✅ Completo |
+| F4 | Telemetry gRPC + KafkaRelayWorker + TimescaleDB (62 tests) | ✅ Completo |
+| F5 | Geofencing ST_Contains + ViolationOutbox (34 tests) | ✅ Completo |
+| F6 | Predictive Maintenance OBD2 + Redis odometer (36 tests) | ✅ Completo |
+| F7 | Reporting CQRS + TimescaleDB + QuestPDF (15 tests) | ✅ Completo |
+| F8 | Notifications SignalR real-time (16 tests) | ✅ Completo |
+| F9 | Angular 21 frontend — 7 MFEs Nx Native Federation | ✅ Completo |
+| F10 | OTel todos los servicios + Polly + DLQ Kafka | ✅ Completo |
+| F11 | GitHub Actions CI/CD + Azure Bicep IaC + cd-azure.yml staging→prod | ✅ Completo |
+| F12 | Security headers, OWASP audit, k6 load test, runbook, smoke tests 37/37 PASSED | ✅ Completo |
 
 ---
 
