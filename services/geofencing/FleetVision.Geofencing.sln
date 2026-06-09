@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8763C59C-4C9D-4AC6-9534-5ED17CFD13A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.Domain", "src\FleetVision.Geofencing.Domain\FleetVision.Geofencing.Domain.csproj", "{F4B47A70-D810-4A6B-BECD-972A253F3F35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.Application", "src\FleetVision.Geofencing.Application\FleetVision.Geofencing.Application.csproj", "{9F626776-65BC-4089-B581-D0680E28461E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.Infrastructure", "src\FleetVision.Geofencing.Infrastructure\FleetVision.Geofencing.Infrastructure.csproj", "{9890C044-85A4-498A-B8A0-2E8BB589B05B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.API", "src\FleetVision.Geofencing.API\FleetVision.Geofencing.API.csproj", "{310C8B04-5DFD-4700-A2D6-79A36AF397D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DD941855-6226-4D32-9F1E-E892DFB347E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.Domain.Tests", "tests\FleetVision.Geofencing.Domain.Tests\FleetVision.Geofencing.Domain.Tests.csproj", "{185F5A46-6EE5-4069-8487-81008695173E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Geofencing.Application.Tests", "tests\FleetVision.Geofencing.Application.Tests\FleetVision.Geofencing.Application.Tests.csproj", "{B5D2C2F7-4421-4602-B474-95FAD062AD24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4B47A70-D810-4A6B-BECD-972A253F3F35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4B47A70-D810-4A6B-BECD-972A253F3F35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4B47A70-D810-4A6B-BECD-972A253F3F35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4B47A70-D810-4A6B-BECD-972A253F3F35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F626776-65BC-4089-B581-D0680E28461E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F626776-65BC-4089-B581-D0680E28461E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F626776-65BC-4089-B581-D0680E28461E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F626776-65BC-4089-B581-D0680E28461E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9890C044-85A4-498A-B8A0-2E8BB589B05B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9890C044-85A4-498A-B8A0-2E8BB589B05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9890C044-85A4-498A-B8A0-2E8BB589B05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9890C044-85A4-498A-B8A0-2E8BB589B05B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310C8B04-5DFD-4700-A2D6-79A36AF397D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310C8B04-5DFD-4700-A2D6-79A36AF397D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310C8B04-5DFD-4700-A2D6-79A36AF397D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310C8B04-5DFD-4700-A2D6-79A36AF397D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{185F5A46-6EE5-4069-8487-81008695173E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{185F5A46-6EE5-4069-8487-81008695173E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{185F5A46-6EE5-4069-8487-81008695173E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{185F5A46-6EE5-4069-8487-81008695173E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D2C2F7-4421-4602-B474-95FAD062AD24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5D2C2F7-4421-4602-B474-95FAD062AD24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D2C2F7-4421-4602-B474-95FAD062AD24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5D2C2F7-4421-4602-B474-95FAD062AD24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F4B47A70-D810-4A6B-BECD-972A253F3F35} = {8763C59C-4C9D-4AC6-9534-5ED17CFD13A9}
+		{9F626776-65BC-4089-B581-D0680E28461E} = {8763C59C-4C9D-4AC6-9534-5ED17CFD13A9}
+		{9890C044-85A4-498A-B8A0-2E8BB589B05B} = {8763C59C-4C9D-4AC6-9534-5ED17CFD13A9}
+		{310C8B04-5DFD-4700-A2D6-79A36AF397D5} = {8763C59C-4C9D-4AC6-9534-5ED17CFD13A9}
+		{185F5A46-6EE5-4069-8487-81008695173E} = {DD941855-6226-4D32-9F1E-E892DFB347E6}
+		{B5D2C2F7-4421-4602-B474-95FAD062AD24} = {DD941855-6226-4D32-9F1E-E892DFB347E6}
+	EndGlobalSection
+EndGlobal
