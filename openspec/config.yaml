@@ -1,0 +1,8 @@
+# OpenSpec project config
+# 'context' is injected into all artifact instructions (propose/specs/design/tasks).
+schema: spec-driven
+context: |
+  FleetVision: SaaS B2B de telemetria de flotas.
+  Stack: 9 microservicios .NET 8 (services/, contratos gRPC en proto/) + frontend Angular 21 con microfrontends (frontend/).
+  Estructura: services/, proto/, frontend/, infra/, docs/.
+  Estado: stage F0 en curso. Arquitectura orientada a eventos y microservicios.
