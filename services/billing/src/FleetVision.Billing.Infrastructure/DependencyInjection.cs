@@ -36,7 +36,8 @@ public static class DependencyInjection
         services.AddSingleton<NpgsqlDataSource>(_ =>
             new NpgsqlDataSourceBuilder(connStr).Build());
 
-        services.AddScoped<IStripeService, StripeService>();
+        // Singleton: StripeConfiguration.ApiKey is global static — must not be set per-request.
+        services.AddSingleton<IStripeService, StripeService>();
 
         var tmBaseUrl = configuration["TenantManagement:BaseUrl"]
             ?? throw new InvalidOperationException("TenantManagement:BaseUrl is required.");

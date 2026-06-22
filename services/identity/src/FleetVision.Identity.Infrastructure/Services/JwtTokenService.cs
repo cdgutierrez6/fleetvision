@@ -63,7 +63,7 @@ public sealed class JwtTokenService : ITokenService
         return Convert.ToBase64String(bytes);
     }
 
-    public Guid? GetUserIdFromToken(string accessToken)
+    public Guid? GetUserIdFromToken(string accessToken, bool allowExpired = false)
     {
         try
         {
@@ -73,12 +73,12 @@ public sealed class JwtTokenService : ITokenService
             handler.ValidateToken(accessToken, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
-                ValidateIssuer = true,
-                ValidIssuer = _issuer,
-                ValidateAudience = true,
-                ValidAudience = _audience,
-                ValidateLifetime = false // Para revocar tokens expirados también
+                IssuerSigningKey         = key,
+                ValidateIssuer           = true,
+                ValidIssuer              = _issuer,
+                ValidateAudience         = true,
+                ValidAudience            = _audience,
+                ValidateLifetime         = !allowExpired,
             }, out var validatedToken);
 
             var jwt = (JwtSecurityToken)validatedToken;

@@ -85,6 +85,14 @@ builder.Services.AddRateLimiter(options =>
         limiter.QueueLimit = 0;
     });
 
+    options.AddFixedWindowLimiter("refresh", limiter =>
+    {
+        limiter.PermitLimit = 30;
+        limiter.Window = TimeSpan.FromMinutes(1);
+        limiter.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiter.QueueLimit = 0;
+    });
+
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
@@ -131,7 +139,7 @@ app.UseCors(policy => policy
     .WithOrigins(builder.Configuration.GetSection("Cors:Origins").Get<string[]>()
                  ?? ["http://localhost:4200"])
     .AllowAnyHeader()
-    .AllowAnyMethod());
+    .WithMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
 
 app.UseAuthentication();
 app.UseAuthorization();

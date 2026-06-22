@@ -8,5 +8,5 @@ public interface ITokenService
     string GenerateAccessToken(User user);
     string GenerateRefreshToken();
     string HashToken(string token);
-    Guid? GetUserIdFromToken(string accessToken);
+    Guid? GetUserIdFromToken(string accessToken, bool allowExpired = false);
 }

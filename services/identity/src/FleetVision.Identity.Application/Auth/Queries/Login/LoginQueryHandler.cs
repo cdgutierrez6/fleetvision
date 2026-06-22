@@ -45,14 +45,6 @@ public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, TokenRespons
         if (!user.IsActive)
             throw new AccountInactiveException();
 
-        // Revoke all existing refresh tokens for this user (single session per user)
-        var existingTokens = await _db.RefreshTokens
-            .Where(rt => rt.UserId == user.Id && !rt.IsRevoked)
-            .ToListAsync(cancellationToken);
-
-        foreach (var oldToken in existingTokens)
-            oldToken.Revoke();
-
         var rawRefreshToken = _tokenService.GenerateRefreshToken();
         var refreshToken = RefreshToken.Create(
             userId: user.Id,

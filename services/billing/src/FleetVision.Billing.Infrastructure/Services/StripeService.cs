@@ -38,16 +38,21 @@ public sealed class StripeService : IStripeService
     public async Task<string> GetOrCreateCustomerAsync(
         Guid tenantId, string email, CancellationToken ct)
     {
-        var service = new CustomerService();
+        var searchService = new CustomerService();
 
-        var existing = await service.ListAsync(
-            new CustomerListOptions { Email = email, Limit = 1 },
+        // Search by tenant_id metadata to avoid cross-tenant collision when two
+        // tenants share the same billing email address.
+        var existing = await searchService.SearchAsync(
+            new CustomerSearchOptions
+            {
+                Query = $"metadata[\"tenant_id\"]:\"{tenantId}\""
+            },
             cancellationToken: ct);
 
         if (existing.Data.Count > 0)
             return existing.Data[0].Id;
 
-        var customer = await service.CreateAsync(
+        var customer = await searchService.CreateAsync(
             new CustomerCreateOptions
             {
                 Email    = email,
@@ -131,9 +136,18 @@ public sealed class StripeService : IStripeService
         try
         {
             stripeEvent = EventUtility.ConstructEvent(
-                payload,
-                stripeSignature,
-                webhookSecret,
+                payload, stripeSignature, webhookSecret,
+                throwOnApiVersionMismatch: true);
+        }
+        catch (StripeException ex) when (
+            ex.Message.StartsWith("Received event with API version", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogWarning(
+                "Stripe API version mismatch: {Message} — processing event anyway. " +
+                "Update the Stripe SDK to eliminate this warning.",
+                ex.Message);
+            stripeEvent = EventUtility.ConstructEvent(
+                payload, stripeSignature, webhookSecret,
                 throwOnApiVersionMismatch: false);
         }
         catch (StripeException ex)

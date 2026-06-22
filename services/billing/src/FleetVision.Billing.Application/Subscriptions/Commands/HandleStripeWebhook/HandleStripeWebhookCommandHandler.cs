@@ -156,8 +156,16 @@ public sealed class HandleStripeWebhookCommandHandler : IRequestHandler<HandleSt
             return;
 
         var sub = await _db.Subscriptions
-            .FirstOrDefaultAsync(s => s.StripeSubscriptionId == evt.StripeSubscriptionId, ct)
-            ?? throw new SubscriptionNotFoundException(evt.StripeSubscriptionId);
+            .FirstOrDefaultAsync(s => s.StripeSubscriptionId == evt.StripeSubscriptionId, ct);
+
+        if (sub is null)
+        {
+            // ACK Stripe (200) — retrying would not help if we don't know this subscription.
+            _logger.LogWarning(
+                "customer.subscription.updated for unknown subscription {SubId} — ACK only.",
+                evt.StripeSubscriptionId);
+            return;
+        }
 
         var oldPlan = sub.Plan;
         var newPlan = evt.Plan ?? sub.Plan;
@@ -193,8 +201,15 @@ public sealed class HandleStripeWebhookCommandHandler : IRequestHandler<HandleSt
             return;
 
         var sub = await _db.Subscriptions
-            .FirstOrDefaultAsync(s => s.StripeSubscriptionId == evt.StripeSubscriptionId, ct)
-            ?? throw new SubscriptionNotFoundException(evt.StripeSubscriptionId);
+            .FirstOrDefaultAsync(s => s.StripeSubscriptionId == evt.StripeSubscriptionId, ct);
+
+        if (sub is null)
+        {
+            _logger.LogWarning(
+                "customer.subscription.deleted for unknown subscription {SubId} — ACK only.",
+                evt.StripeSubscriptionId);
+            return;
+        }
 
         var oldPlan = sub.Plan;
 

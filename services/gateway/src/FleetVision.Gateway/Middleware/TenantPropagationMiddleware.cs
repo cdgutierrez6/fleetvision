@@ -28,8 +28,18 @@ public sealed class TenantPropagationMiddleware
 
             if (!string.IsNullOrWhiteSpace(tenantId))
             {
-                context.Request.Headers[TenantIdHeaderName] = tenantId;
-                _logger.LogDebug("Propagating tenant {TenantId} via {Header}", tenantId, TenantIdHeaderName);
+                if (!Guid.TryParse(tenantId, out _))
+                {
+                    _logger.LogWarning(
+                        "Malformed tenant_id claim '{TenantId}' — header propagation skipped.",
+                        tenantId);
+                }
+                else
+                {
+                    context.Request.Headers[TenantIdHeaderName] = tenantId;
+                    _logger.LogDebug(
+                        "Propagating tenant {TenantId} via {Header}", tenantId, TenantIdHeaderName);
+                }
             }
         }
 
