@@ -489,6 +489,7 @@ services:
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       TenantManagement__BaseUrl: http://tenant-management:8080
+      InternalApiKey: ${INTERNAL_API_KEY}
       OpenTelemetry__Endpoint: http://jaeger:4317
       # Kafka consumer — telemetry.raw → EvaluateTelemetryEventCommand
       Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"

@@ -8,6 +8,8 @@ using FleetVision.Geofencing.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace FleetVision.Geofencing.API.Controllers;
 
@@ -18,11 +20,13 @@ public sealed class GeofencesController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ITenantContext _tenantContext;
+    private readonly IConfiguration _config;
 
-    public GeofencesController(IMediator mediator, ITenantContext tenantContext)
+    public GeofencesController(IMediator mediator, ITenantContext tenantContext, IConfiguration config)
     {
         _mediator      = mediator;
         _tenantContext = tenantContext;
+        _config        = config;
     }
 
     private Guid TenantId => _tenantContext.TenantId
@@ -116,14 +120,29 @@ public sealed class GeofencesController : ControllerBase
         return Ok(result);
     }
 
-    // POST /geofences/evaluate — internal endpoint for telemetry service
+    // POST /geofences/evaluate — internal endpoint for telemetry service only.
+    // Not exposed via the YARP Gateway (/geofences/* requires auth at the gateway level).
+    // X-Internal-Key provides a second layer against direct port access on the Docker host.
     [HttpPost("evaluate")]
     [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ProducesResponseType(typeof(EvaluationResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Evaluate(
-        [FromBody] EvaluatePositionRequest request, CancellationToken ct = default)
+        [FromBody] EvaluatePositionRequest request,
+        [FromHeader(Name = "X-Internal-Key")] string? internalKey,
+        CancellationToken ct = default)
     {
+        var expectedKey = _config["InternalApiKey"];
+        if (string.IsNullOrEmpty(expectedKey) || string.IsNullOrEmpty(internalKey))
+            return Unauthorized();
+
+        var expectedBytes = Encoding.UTF8.GetBytes(expectedKey);
+        var actualBytes   = Encoding.UTF8.GetBytes(internalKey);
+        if (!CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes))
+            return Unauthorized();
+
         var result = await _mediator.Send(new EvaluateTelemetryEventCommand(
             request.TenantId,
             request.VehicleId,

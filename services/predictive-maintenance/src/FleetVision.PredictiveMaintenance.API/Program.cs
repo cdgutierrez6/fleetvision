@@ -175,16 +175,13 @@ if (app.Environment.IsDevelopment())
 }
 
 Log.Information("FleetVision Predictive Maintenance Service started on {Environment}", app.Environment.EnvironmentName);
-Console.WriteLine("[DIAG] Calling app.Run()...");
 try
 {
     app.Run();
-    Console.WriteLine("[DIAG] app.Run() completed (normal shutdown).");
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application terminated unexpectedly.");
-    Console.Error.WriteLine($"[DIAG] app.Run() THREW: {ex.GetType().Name}: {ex.Message}");
     throw;
 }
 
