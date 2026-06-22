@@ -258,6 +258,17 @@ La key de deduplicación `odometer-inc:{tenantId}:{vehicleId}:{kafkaOffset}` con
 ## Critical Environment Variables
 
 - `KAFKA_CLUSTER_ID`: generate with `docker run --rm confluentinc/cp-kafka:7.7.1 kafka-storage random-uuid` — required for KRaft mode; changing it destroys the cluster
-- `JWT_SIGNING_KEY`: minimum 64 chars — changing it invalidates all existing tokens
+- **JWT RSA key pair** (`infra/keys/jwt-private.pem` + `infra/keys/jwt-public.pem`): generate once with `bash infra/scripts/generate-jwt-keys.sh`. Files are gitignored. Identity mounts both; all other services mount only the public key. Changing the key pair invalidates all active access tokens (TTL 15 min) — users stay logged in via refresh tokens which are DB-validated, not signature-validated.
+- `JWT_SIGNING_KEY`: kept temporarily during HS256→RS256 transition (see `.env.example`). Remove from all non-identity services after 15 min post-deploy.
 - `STRIPE_WEBHOOK_SECRET`: obtain from the Stripe dashboard when registering the webhook endpoint
 - `POSTGRES_PASSWORD` / `TIMESCALE_PASSWORD`: minimum 32 chars
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

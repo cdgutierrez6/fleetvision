@@ -377,10 +377,15 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__IdentityDb: "Host=postgres;Port=5432;Database=identity_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPrivateKeyPath: /run/secrets/jwt-private.pem
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-private.pem:/run/secrets/jwt-private.pem:ro
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -405,11 +410,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__TenantManagementDb: "Host=postgres;Port=5432;Database=tenant_management_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       InternalApiKey: ${INTERNAL_API_KEY}
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -436,11 +444,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__FleetAssetsDb: "Host=postgres;Port=5432;Database=fleet_assets_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       TenantManagement__BaseUrl: http://tenant-management:8080
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -473,13 +484,16 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__GeofencingDb: "Host=postgres;Port=5432;Database=geofencing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       TenantManagement__BaseUrl: http://tenant-management:8080
       OpenTelemetry__Endpoint: http://jaeger:4317
       # Kafka consumer — telemetry.raw → EvaluateTelemetryEventCommand
       Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -556,7 +570,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__BillingDb: "Host=postgres;Port=5432;Database=billing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       TenantManagement__BaseUrl: http://tenant-management:8080
@@ -565,6 +580,8 @@ services:
       Stripe__SecretKey: ${STRIPE_SECRET_KEY:-sk_test_PENDING}
       Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-whsec_PENDING}
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -594,11 +611,14 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Default: "Host=postgres;Port=5432;Database=maintenance_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
       Redis__ConnectionString: "redis:6379,password=${REDIS_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -625,11 +645,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__NotificationsDb: "Host=postgres;Port=5432;Database=notifications_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       Kafka__BootstrapServers: "kafka-1:19092,kafka-2:19092,kafka-3:19092"
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -660,10 +683,13 @@ services:
       ConnectionStrings__TelemetryDb: "Host=timescaledb;Port=5432;Database=telemetry_db;Username=${TIMESCALE_USER:-telemetry_user};Password=${TIMESCALE_PASSWORD}"
       ConnectionStrings__GeofencingDb: "Host=postgres;Port=5432;Database=geofencing_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
       ConnectionStrings__FleetAssetsDb: "Host=postgres;Port=5432;Database=fleet_assets_db;Username=${POSTGRES_USER:-fv_admin};Password=${POSTGRES_PASSWORD}"
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       OpenTelemetry__Endpoint: http://jaeger:4317
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:
@@ -697,7 +723,8 @@ services:
       - "${GATEWAY_PORT:-5000}:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Jwt__RsaPublicKeyPath: /run/secrets/jwt-public.pem
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}    # TRANSITION — remove after all HS256 tokens expire
       Jwt__Issuer: fleetvision-identity
       Jwt__Audience: fleetvision-api
       OpenTelemetry__Endpoint: http://jaeger:4317
@@ -709,6 +736,8 @@ services:
       Downstream__PredictiveMaintenanceUrl: http://predictive-maintenance:8080
       Downstream__NotificationsUrl: http://notifications:8080
       Downstream__ReportingUrl: http://reporting:8080
+    volumes:
+      - ./infra/keys/jwt-public.pem:/run/secrets/jwt-public.pem:ro
     networks:
       - fv-net
     healthcheck:

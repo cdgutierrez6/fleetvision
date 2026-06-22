@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using System.Security.Cryptography;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,9 +40,28 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateTenantProfileCommand).As
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
 // ─── JWT Bearer ───────────────────────────────────────────────
-var signingKey = builder.Configuration["Jwt:SigningKey"];
-if (string.IsNullOrWhiteSpace(signingKey) || signingKey.Length < 32)
-    throw new InvalidOperationException("Jwt:SigningKey is required and must be at least 32 characters.");
+// RS256 primary + HS256 legacy during transition (remove Jwt:SigningKey after 15 min post-deploy)
+var rsaPublicPem = builder.Configuration["Jwt:RsaPublicKey"]
+    ?? (File.Exists(builder.Configuration["Jwt:RsaPublicKeyPath"] ?? "")
+        ? File.ReadAllText(builder.Configuration["Jwt:RsaPublicKeyPath"]!)
+        : null)
+    ?? throw new InvalidOperationException(
+        "Jwt:RsaPublicKey or Jwt:RsaPublicKeyPath is required.");
+
+var rsaForValidation = RSA.Create();
+rsaForValidation.ImportFromPem(rsaPublicPem.AsSpan());
+var jwtSigningKeys = new List<SecurityKey>
+{
+    new RsaSecurityKey(rsaForValidation) { KeyId = "rsa-1" }
+};
+
+var legacyJwtKey = builder.Configuration["Jwt:SigningKey"];
+if (!string.IsNullOrWhiteSpace(legacyJwtKey))
+{
+    jwtSigningKeys.Add(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(legacyJwtKey)));
+    Log.Warning("[JWT] Transition mode: Jwt:SigningKey (HS256) is set. " +
+                "Remove from this service 15 min after Identity deploys RS256.");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -49,14 +69,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey        = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey)),
-            ValidateIssuer          = true,
-            ValidIssuer             = builder.Configuration["Jwt:Issuer"] ?? "fleetvision-identity",
-            ValidateAudience        = true,
-            ValidAudience           = builder.Configuration["Jwt:Audience"] ?? "fleetvision-api",
-            ValidateLifetime        = true,
-            ClockSkew               = TimeSpan.FromSeconds(30),
-            RoleClaimType           = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            IssuerSigningKeys        = jwtSigningKeys,
+            ValidateIssuer           = true,
+            ValidIssuer              = builder.Configuration["Jwt:Issuer"] ?? "fleetvision-identity",
+            ValidateAudience         = true,
+            ValidAudience            = builder.Configuration["Jwt:Audience"] ?? "fleetvision-api",
+            ValidateLifetime         = true,
+            ClockSkew                = TimeSpan.FromSeconds(30),
+            RoleClaimType            = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         };
     });
 
