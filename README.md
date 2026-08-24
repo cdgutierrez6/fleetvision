@@ -1,4 +1,4 @@
-# FleetVision — B2B SaaS Fleet Telemetry Platform
+# FleetVision — Fleet Telemetry Platform (Portfolio Build)
 
 [![.NET](https://img.shields.io/badge/.NET_8-5C2D91?style=flat-square&logo=.net&logoColor=white)](https://dotnet.microsoft.com)
 [![Angular](https://img.shields.io/badge/Angular_21-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.io)
@@ -14,7 +14,13 @@
 <details open>
 <summary><h2>🇺🇸 English</h2></summary>
 
-Multi-tenant B2B SaaS platform for commercial fleet telemetry — built on **10 .NET 8 microservices** (Clean Architecture), **Angular 21 with 7 Micro-Frontends** (Nx Native Federation), a 3-node **Kafka KRaft** cluster, **TimescaleDB** hypertables for GPS time-series data, **PostGIS** for real-time geospatial operations, and full deployment on **Azure Container Apps**. Based on architecture patterns from vehicle telemetry systems processing millions of events per day in production.
+A multi-tenant fleet-telemetry platform, built as a **personal portfolio project** — **10 .NET 8 microservices** (Clean Architecture), **Angular 21 with 7 Micro-Frontends** (Nx Native Federation), a 3-node **Kafka KRaft** cluster, **TimescaleDB** hypertables for GPS time-series data, **PostGIS** for real-time geospatial operations, and a full CI/CD path to **Azure Container Apps**. It is a personal reference implementation that applies the architecture patterns found in high-throughput vehicle-telemetry systems — not a live product with real fleet traffic.
+
+### Status & Scope
+
+FleetVision is a **personal reference implementation** — a portfolio build, not a commercial product. There is no live deployment, no real tenants, and no real fleet traffic. The figures below (services, tests, load-test targets) describe what the codebase implements and what it does on a local machine — not production load it has served.
+
+Its purpose is to demonstrate, end to end, the microservice, event-streaming, multi-tenant, and observability patterns used in real-world vehicle telemetry. Run it locally with the Quick Start below.
 
 ---
 
@@ -88,18 +94,18 @@ graph TB
 
 | Service | Port | Responsibility | Tests |
 |---------|------|---------------|-------|
-| `gateway` | 5000 | YARP reverse proxy, JWT validation, TenantPropagation, security headers | — |
-| `identity` | 5001 | OpenIddict JWT, Argon2 password hash, RBAC (4 roles), refresh token rotation | 34 |
-| `tenant-management` | 5002 | Tenant onboarding, plan limits, internal plan-update API | 24 |
+| `gateway` | 5000 | YARP reverse proxy, JWT validation, TenantPropagation, security headers | 5 |
+| `identity` | 5001 | OpenIddict JWT, Argon2 password hash, RBAC (4 roles), refresh token rotation | 31 |
+| `tenant-management` | 5002 | Tenant onboarding, plan limits, internal plan-update API | 19 |
 | `billing` | 5003 | Stripe subscriptions, webhook HMAC, BillingRelayWorker outbox | 29 |
-| `fleet-assets` | 5004 | Vehicles, fleets, drivers, PostGIS geofences CRUD | 65 |
-| `telemetry` | 5005 | gRPC ingestion, KafkaRelayWorker → `telemetry.raw`, TimescaleDB bulk insert | 62 |
+| `fleet-assets` | 5004 | Vehicles, fleets, drivers, PostGIS geofences CRUD | 60 |
+| `telemetry` | 5005 | gRPC ingestion, KafkaRelayWorker → `telemetry.raw`, TimescaleDB bulk insert | 37 |
 | `geofencing` | 5006 | Kafka consumer, ST_Contains check, ViolationOutboxEnqueuer | 34 |
 | `predictive-maintenance` | 5007 | OBD2 rules, odometer Redis INCRBYFLOAT, MaintenanceRuleEngine | 36 |
 | `reporting` | 5008 | CQRS queries, TimescaleDB window functions, QuestPDF export | 15 |
-| `notifications` | 5009 | SignalR ViolationHub, Kafka consumer, DLQ for corrupt messages | 16 |
+| `notifications` | 5009 | SignalR ViolationHub, Kafka consumer, DLQ for corrupt messages | 13 |
 
-**Total: 315+ unit tests · OWASP Top 10 audited · 37/37 smoke tests PASSED**
+**Total: 279 unit tests (xUnit test methods) · OWASP Top 10 self-review · 37/37 local smoke checks passing**
 
 ---
 
@@ -212,23 +218,23 @@ fleetvision/
 
 ---
 
-### Status
+### Build Phases
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | F0 | Base infrastructure (Docker Compose, Kafka KRaft, TimescaleDB, PostGIS, Redis, OTel) | ✅ Done |
-| F1 | Identity & Access + API Gateway — 34 tests | ✅ Done |
-| F2 | Tenant Management + Billing Stripe — 53 tests | ✅ Done |
-| F3 | Fleet & Assets CRUD PostGIS — 65 tests | ✅ Done |
-| F4 | Telemetry gRPC + KafkaRelayWorker + TimescaleDB — 62 tests | ✅ Done |
+| F1 | Identity & Access + API Gateway — 36 tests | ✅ Done |
+| F2 | Tenant Management + Billing Stripe — 48 tests | ✅ Done |
+| F3 | Fleet & Assets CRUD PostGIS — 60 tests | ✅ Done |
+| F4 | Telemetry gRPC + KafkaRelayWorker + TimescaleDB — 37 tests | ✅ Done |
 | F5 | Geofencing ST_Contains + ViolationOutbox — 34 tests | ✅ Done |
 | F6 | Predictive Maintenance OBD2 + Redis odometer — 36 tests | ✅ Done |
 | F7 | Reporting CQRS + TimescaleDB + QuestPDF — 15 tests | ✅ Done |
-| F8 | Notifications SignalR real-time — 16 tests | ✅ Done |
+| F8 | Notifications SignalR real-time — 13 tests | ✅ Done |
 | F9 | Angular 21 frontend — 7 MFEs Nx Native Federation | ✅ Done |
 | F10 | OTel all services + Polly + DLQ Kafka | ✅ Done |
 | F11 | GitHub Actions CI/CD + Azure Bicep IaC + staging→prod gate | ✅ Done |
-| F12 | Security headers, OWASP audit, k6 load test, runbook, smoke tests 37/37 PASSED | ✅ Done |
+| F12 | Security headers, OWASP self-review, k6 load test, runbook, 37/37 local smoke checks passing | ✅ Done |
 
 ---
 
@@ -241,7 +247,13 @@ fleetvision/
 <details>
 <summary><h2>🇨🇴 Español</h2></summary>
 
-Plataforma SaaS B2B multi-tenant para telemetría de flotas comerciales — construida sobre **10 microservicios .NET 8** (Clean Architecture), **Angular 21 con 7 Micro-Frontends** (Nx Native Federation), cluster **Kafka KRaft** de 3 nodos, hypertables **TimescaleDB** para series de tiempo GPS, **PostGIS** para operaciones geoespaciales en tiempo real, y despliegue completo en **Azure Container Apps**. Basada en patrones de arquitectura de sistemas de telemetría vehicular que procesan millones de eventos diarios en producción.
+Plataforma multi-tenant de telemetría de flotas, construida como **proyecto personal de portafolio** — **10 microservicios .NET 8** (Clean Architecture), **Angular 21 con 7 Micro-Frontends** (Nx Native Federation), cluster **Kafka KRaft** de 3 nodos, hypertables **TimescaleDB** para series de tiempo GPS, **PostGIS** para operaciones geoespaciales en tiempo real, y una ruta CI/CD completa a **Azure Container Apps**. Es una implementación de referencia personal que aplica los patrones de arquitectura de sistemas de telemetría vehicular de alto volumen — no un producto en vivo con tráfico real de flotas.
+
+### Estado y Alcance
+
+FleetVision es una **implementación de referencia personal** — un proyecto de portafolio, no un producto comercial. No hay despliegue en vivo, ni tenants reales, ni tráfico real de flotas. Las cifras de abajo (servicios, tests, objetivos de carga) describen lo que implementa el código y lo que hace en una máquina local — no carga de producción que haya atendido.
+
+Su propósito es demostrar, de punta a punta, los patrones de microservicios, streaming de eventos, multi-tenancy y observabilidad usados en telemetría vehicular del mundo real. Córrelo localmente con el Quick Start de abajo.
 
 ---
 
@@ -315,18 +327,18 @@ graph TB
 
 | Servicio | Puerto | Responsabilidad | Tests |
 |---------|--------|----------------|-------|
-| `gateway` | 5000 | YARP reverse proxy, validación JWT, TenantPropagation, security headers | — |
-| `identity` | 5001 | OpenIddict JWT, hash Argon2, RBAC (4 roles), rotación refresh tokens | 34 |
-| `tenant-management` | 5002 | Onboarding de tenants, límites por plan, API interna actualización de plan | 24 |
+| `gateway` | 5000 | YARP reverse proxy, validación JWT, TenantPropagation, security headers | 5 |
+| `identity` | 5001 | OpenIddict JWT, hash Argon2, RBAC (4 roles), rotación refresh tokens | 31 |
+| `tenant-management` | 5002 | Onboarding de tenants, límites por plan, API interna actualización de plan | 19 |
 | `billing` | 5003 | Suscripciones Stripe, HMAC webhook, BillingRelayWorker outbox | 29 |
-| `fleet-assets` | 5004 | Vehículos, flotas, conductores, CRUD geofences PostGIS | 65 |
-| `telemetry` | 5005 | Ingesta gRPC, KafkaRelayWorker → `telemetry.raw`, INSERT masivo TimescaleDB | 62 |
+| `fleet-assets` | 5004 | Vehículos, flotas, conductores, CRUD geofences PostGIS | 60 |
+| `telemetry` | 5005 | Ingesta gRPC, KafkaRelayWorker → `telemetry.raw`, INSERT masivo TimescaleDB | 37 |
 | `geofencing` | 5006 | Consumer Kafka, verificación ST_Contains, ViolationOutboxEnqueuer | 34 |
 | `predictive-maintenance` | 5007 | Reglas OBD2, odómetro Redis INCRBYFLOAT, MaintenanceRuleEngine | 36 |
 | `reporting` | 5008 | Queries CQRS, funciones de ventana TimescaleDB, export QuestPDF | 15 |
-| `notifications` | 5009 | ViolationHub SignalR, consumer Kafka, DLQ para mensajes corruptos | 16 |
+| `notifications` | 5009 | ViolationHub SignalR, consumer Kafka, DLQ para mensajes corruptos | 13 |
 
-**Total: 315+ tests unitarios · Auditoría OWASP Top 10 · 37/37 smoke tests PASADOS**
+**Total: 279 tests unitarios (métodos de test xUnit) · Autorevisión OWASP Top 10 · 37/37 smoke checks locales pasando**
 
 ---
 
@@ -439,23 +451,23 @@ fleetvision/
 
 ---
 
-### Estado
+### Fases del Build
 
 | Fase | Descripción | Estado |
 |------|-------------|--------|
 | F0 | Infraestructura base (Docker Compose, Kafka KRaft, TimescaleDB, PostGIS, Redis, OTel) | ✅ Completo |
-| F1 | Identity & Access + API Gateway — 34 tests | ✅ Completo |
-| F2 | Tenant Management + Billing Stripe — 53 tests | ✅ Completo |
-| F3 | Fleet & Assets CRUD PostGIS — 65 tests | ✅ Completo |
-| F4 | Telemetry gRPC + KafkaRelayWorker + TimescaleDB — 62 tests | ✅ Completo |
+| F1 | Identity & Access + API Gateway — 36 tests | ✅ Completo |
+| F2 | Tenant Management + Billing Stripe — 48 tests | ✅ Completo |
+| F3 | Fleet & Assets CRUD PostGIS — 60 tests | ✅ Completo |
+| F4 | Telemetry gRPC + KafkaRelayWorker + TimescaleDB — 37 tests | ✅ Completo |
 | F5 | Geofencing ST_Contains + ViolationOutbox — 34 tests | ✅ Completo |
 | F6 | Predictive Maintenance OBD2 + Redis odometer — 36 tests | ✅ Completo |
 | F7 | Reporting CQRS + TimescaleDB + QuestPDF — 15 tests | ✅ Completo |
-| F8 | Notifications SignalR tiempo real — 16 tests | ✅ Completo |
+| F8 | Notifications SignalR tiempo real — 13 tests | ✅ Completo |
 | F9 | Angular 21 frontend — 7 MFEs Nx Native Federation | ✅ Completo |
 | F10 | OTel todos los servicios + Polly + DLQ Kafka | ✅ Completo |
 | F11 | GitHub Actions CI/CD + Bicep IaC Azure + gate staging→prod | ✅ Completo |
-| F12 | Security headers, auditoría OWASP, k6 load test, runbook, smoke tests 37/37 PASADOS | ✅ Completo |
+| F12 | Security headers, autorevisión OWASP, k6 load test, runbook, 37/37 smoke checks locales pasando | ✅ Completo |
 
 ---
 
