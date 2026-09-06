@@ -14,6 +14,16 @@ public sealed class Argon2PasswordHasher : IPasswordHasher
     private const int SaltSize = 16;
     private const int HashSize = 32;
 
+    // Computed exactly once (process-wide, not per DI instance). Reuses Hash() so the
+    // dummy inherits the same m/t/p cost parameters as real hashes — single source of
+    // truth, no duplicated constants. The random password guarantees Verify(anything,
+    // DummyHash) is false, so it can never authenticate anyone.
+    private static readonly Lazy<string> LazyDummyHash = new(
+        () => new Argon2PasswordHasher().Hash(Convert.ToBase64String(RandomNumberGenerator.GetBytes(32))));
+
+    /// <inheritdoc />
+    public string DummyHash => LazyDummyHash.Value;
+
     public string Hash(string password)
     {
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
@@ -40,8 +50,11 @@ public sealed class Argon2PasswordHasher : IPasswordHasher
             if (!hash.StartsWith("$argon2id$"))
                 return false;
 
+            // A well-formed hash yields exactly 5 segments: argon2id, v=19, params, salt, hash.
+            // Guard on < 5 (not < 4) so a malformed 4-segment string is rejected here explicitly
+            // instead of throwing IndexOutOfRange at parts[4] and relying on the catch below.
             var parts = hash.Split('$', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length < 4)
+            if (parts.Length < 5)
                 return false;
 
             // parts[2] = "m=65536,t=3,p=4"

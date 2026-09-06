@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Identity.Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Identity.Application.Tests", "tests\FleetVision.Identity.Application.Tests\FleetVision.Identity.Application.Tests.csproj", "{74D7F8EF-4C2A-4215-976A-F8B0E7289B27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetVision.Identity.Infrastructure.Tests", "tests\FleetVision.Identity.Infrastructure.Tests\FleetVision.Identity.Infrastructure.Tests.csproj", "{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{74D7F8EF-4C2A-4215-976A-F8B0E7289B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74D7F8EF-4C2A-4215-976A-F8B0E7289B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74D7F8EF-4C2A-4215-976A-F8B0E7289B27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FAA6E113-ED60-4D12-AEDF-D27F0C029671} = {3B30DA2B-B282-49FF-938F-02049AE68173}
@@ -60,5 +66,6 @@ Global
 		{1E9B3EF1-8060-45C0-A56E-CD3B7D674451} = {3B30DA2B-B282-49FF-938F-02049AE68173}
 		{D578F467-9488-4CE8-A58D-ADEA810EDE07} = {1CE5FE8F-8750-4FB5-BE4D-7E9DDD1CD5F5}
 		{74D7F8EF-4C2A-4215-976A-F8B0E7289B27} = {1CE5FE8F-8750-4FB5-BE4D-7E9DDD1CD5F5}
+		{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C} = {1CE5FE8F-8750-4FB5-BE4D-7E9DDD1CD5F5}
 	EndGlobalSection
 EndGlobal
