@@ -30,3 +30,7 @@ jobs:
       api-project: services/notifications/src/FleetVision.Notifications.API/FleetVision.Notifications.API.csproj
       has-tests: true
       test-paths: services/notifications/tests/FleetVision.Notifications.Tests
+      # notifications is a SignalR push service (API + Infrastructure only): no Domain/
+      # Application layer to unit-cover, so the >=70% gate would fail at 0.0% by
+      # construction. Its ViolationHub / consumer tests still run.
+      unit-coverage-gate: false

@@ -28,3 +28,6 @@ jobs:
       api-project: services/gateway/src/FleetVision.Gateway/FleetVision.Gateway.csproj
       has-tests: true
       test-paths: services/gateway/tests/FleetVision.Gateway.Tests
+      # gateway is a YARP reverse proxy: no Domain/Application layer to unit-cover, so the
+      # >=70% gate would fail at 0.0% by construction. Its middleware tests still run.
+      unit-coverage-gate: false

@@ -25,6 +25,14 @@ on:
         required: false
         type: string
         default: ''
+      unit-coverage-gate:
+        description: >-
+          Enforce the >=70% unit-coverage gate. Set false for services that have NO
+          Domain/Application layer to unit-cover (e.g. gateway = YARP proxy, notifications
+          = SignalR push): their tests still run, only the coverage threshold is skipped.
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   build-and-test:
@@ -67,7 +75,7 @@ jobs:
           done
 
       - name: Quality gate (line coverage >= 70%)
-        if: inputs.has-tests
+        if: inputs.has-tests && inputs.unit-coverage-gate
         run: |
           python3 -c "
           import xml.etree.ElementTree as ET, glob, sys
