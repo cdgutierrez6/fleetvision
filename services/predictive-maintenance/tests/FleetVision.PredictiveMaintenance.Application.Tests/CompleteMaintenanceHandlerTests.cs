@@ -2,6 +2,7 @@ using FleetVision.PredictiveMaintenance.Application.Commands;
 using FleetVision.PredictiveMaintenance.Domain.Entities;
 using FleetVision.PredictiveMaintenance.Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FleetVision.PredictiveMaintenance.Application.Tests;
@@ -21,7 +22,7 @@ public sealed class CompleteMaintenanceHandlerTests
         repo.Setup(r => r.GetByIdAsync(RecordId, TenantId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MaintenanceRecord?)null);
 
-        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object);
+        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object, NullLogger<CompleteMaintenanceHandler>.Instance);
         var result  = await handler.Handle(new CompleteMaintenanceCommand(RecordId, TenantId), CancellationToken.None);
 
         result.Should().BeFalse();
@@ -39,7 +40,7 @@ public sealed class CompleteMaintenanceHandlerTests
         repo.Setup(r => r.GetByIdAsync(record.Id, TenantId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(record);
 
-        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object);
+        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object, NullLogger<CompleteMaintenanceHandler>.Instance);
         var result  = await handler.Handle(new CompleteMaintenanceCommand(record.Id, TenantId), CancellationToken.None);
 
         result.Should().BeTrue();
@@ -59,7 +60,7 @@ public sealed class CompleteMaintenanceHandlerTests
         repo.Setup(r => r.GetByIdAsync(record.Id, TenantId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(record);
 
-        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object);
+        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object, NullLogger<CompleteMaintenanceHandler>.Instance);
         var result  = await handler.Handle(new CompleteMaintenanceCommand(record.Id, TenantId), CancellationToken.None);
 
         result.Should().BeTrue();
@@ -78,7 +79,7 @@ public sealed class CompleteMaintenanceHandlerTests
         repo.Setup(r => r.GetByIdAsync(RecordId, otherTenant, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MaintenanceRecord?)null); // RLS blocks cross-tenant access
 
-        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object);
+        var handler = new CompleteMaintenanceHandler(repo.Object, cache.Object, NullLogger<CompleteMaintenanceHandler>.Instance);
         var result  = await handler.Handle(new CompleteMaintenanceCommand(RecordId, otherTenant), CancellationToken.None);
 
         result.Should().BeFalse();
