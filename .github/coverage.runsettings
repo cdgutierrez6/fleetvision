@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared code-coverage settings for every .NET service CI (see _ci-dotnet.yml).
+
+  The >=70% line-coverage gate is a UNIT-coverage gate. In this Clean Architecture the
+  layers that unit tests own are Domain and Application (pure business logic, no I/O), so
+  the gate MEASURES ONLY THOSE:  Include = [*.Domain] + [*.Application].
+
+  Deliberately NOT measured here (they are integration/e2e territory, not unit coverage —
+  otherwise the metric is dominated by code the unit suite never exercises):
+    - the *.API assembly       (Program.cs, controllers, middleware, DI/auth bootstrap)
+    - the *.Infrastructure layer (EF DbContext, Kafka consumers, Redis, HTTP clients)
+    - EF Core migrations and generated / compiler-emitted code
+  Those layers still get tests, but under integration suites, not this unit gate.
+
+  The 70% threshold itself is unchanged; only WHAT is measured is scoped. If a service
+  needs an Infrastructure unit carve-out (e.g. Argon2PasswordHasher), widen Include there.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <!-- Coverlet filters: [assembly-filter]type-filter, comma-separated, wildcards * ? -->
+          <Include>[FleetVision.*.Domain]*,[FleetVision.*.Application]*</Include>
+          <Exclude>[*]*.Migrations.*</Exclude>
+          <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+          <SkipAutoProps>true</SkipAutoProps>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -60,6 +60,7 @@ jobs:
         run: |
           for project in ${{ inputs.test-paths }}; do
             dotnet test "$project" \
+              --settings .github/coverage.runsettings \
               --collect:"XPlat Code Coverage" \
               --results-directory TestResults \
               --logger "console;verbosity=minimal"
@@ -104,7 +105,13 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          # github.token (not secrets.GITHUB_TOKEN): in a reusable workflow the `secrets`
+          # context is empty unless the caller passes `secrets: inherit`, so referencing
+          # secrets.GITHUB_TOKEN would resolve to an empty password and the GHCR login
+          # would fail at runtime. github.token is always in scope and is the same
+          # automatic token. (The startup_failure that plagued this workflow was a
+          # separate issue: callers must grant `packages: write`, see each ci-*.yml.)
+          password: ${{ github.token }}
 
       - name: Docker metadata
         id: meta
@@ -131,7 +138,10 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ inputs.service-name }}
 
       - name: Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@0.28.0
+        # v0.28.0 fails to resolve: its bare form has no tag, and even v0.28.0 pins an
+        # internal aquasecurity/setup-trivy@v0.2.1 that no longer exists. Use the current
+        # release, which pins a valid setup-trivy. (Scan is non-blocking: exit-code '0'.)
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ steps.build.outputs.imageid }}
           format: table
