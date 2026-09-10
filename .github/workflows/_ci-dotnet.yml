@@ -60,6 +60,7 @@ jobs:
         run: |
           for project in ${{ inputs.test-paths }}; do
             dotnet test "$project" \
+              --settings .github/coverage.runsettings \
               --collect:"XPlat Code Coverage" \
               --results-directory TestResults \
               --logger "console;verbosity=minimal"
