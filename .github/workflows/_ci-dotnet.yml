@@ -138,7 +138,9 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ inputs.service-name }}
 
       - name: Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@0.28.0
+        # Tag must carry the 'v' prefix: aquasecurity/trivy-action has no '0.28.0' tag,
+        # only 'v0.28.0' — the bare form fails action resolution at "Set up job".
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           image-ref: ${{ steps.build.outputs.imageid }}
           format: table
