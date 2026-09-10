@@ -67,11 +67,27 @@ jobs:
         if: inputs.has-tests
         run: |
           for project in ${{ inputs.test-paths }}; do
-            dotnet test "$project" \
-              --settings .github/coverage.runsettings \
-              --collect:"XPlat Code Coverage" \
-              --results-directory TestResults \
-              --logger "console;verbosity=minimal"
+            case "$project" in
+              *.Domain.Tests|*.Application.Tests)
+                # Coverage-gated layers. coverage.runsettings filters instrumentation to
+                # [FleetVision.*.Domain]/[*.Application], and the quality gate below takes the
+                # MIN line-rate across every emitted Cobertura file. So ONLY these two layers
+                # emit coverage — that is exactly what the >=70% gate is meant to measure.
+                dotnet test "$project" \
+                  --settings .github/coverage.runsettings \
+                  --collect:"XPlat Code Coverage" \
+                  --results-directory TestResults \
+                  --logger "console;verbosity=minimal"
+                ;;
+              *)
+                # Other layers (e.g. *.API.Tests) still RUN — they validate behaviour and a
+                # red test still fails the build — but they must NOT emit Cobertura: filtered to
+                # Domain/Application they would score ~0% and tank the min, failing the gate by
+                # construction. (billing was the only service to hit this; see #4.)
+                dotnet test "$project" \
+                  --logger "console;verbosity=minimal"
+                ;;
+            esac
           done
 
       - name: Quality gate (line coverage >= 70%)

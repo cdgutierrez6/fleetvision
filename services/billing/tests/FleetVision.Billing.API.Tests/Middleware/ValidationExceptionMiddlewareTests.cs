@@ -55,8 +55,9 @@ public sealed class ValidationExceptionMiddlewareTests
     public async Task InvokeAsync_NoActiveStripeSubscriptionException_Returns422WithGenericMessage()
     {
         var ctx = BuildContext();
+        var tenantId = Guid.NewGuid();
         var middleware = CreateMiddleware(_ =>
-            throw new NoActiveStripeSubscriptionException("internal-tenant-detail"));
+            throw new NoActiveStripeSubscriptionException(tenantId));
 
         await middleware.InvokeAsync(ctx);
 
@@ -64,7 +65,8 @@ public sealed class ValidationExceptionMiddlewareTests
         var body = await ReadResponseBodyAsync(ctx);
         var json = JsonDocument.Parse(body).RootElement;
         json.GetProperty("error").GetString().Should().Be("No active subscription found.");
-        body.Should().NotContain("internal-tenant-detail");
+        // The tenant id is embedded in the exception message; it must never leak to the client
+        body.Should().NotContain(tenantId.ToString());
     }
 
     // ─── SubscriptionAlreadyCanceledException → 409, generic message ─────────
@@ -73,8 +75,9 @@ public sealed class ValidationExceptionMiddlewareTests
     public async Task InvokeAsync_SubscriptionAlreadyCanceledException_Returns409WithGenericMessage()
     {
         var ctx = BuildContext();
+        var tenantId = Guid.NewGuid();
         var middleware = CreateMiddleware(_ =>
-            throw new SubscriptionAlreadyCanceledException("tenant-guid-here"));
+            throw new SubscriptionAlreadyCanceledException(tenantId));
 
         await middleware.InvokeAsync(ctx);
 
@@ -82,7 +85,8 @@ public sealed class ValidationExceptionMiddlewareTests
         var body = await ReadResponseBodyAsync(ctx);
         var json = JsonDocument.Parse(body).RootElement;
         json.GetProperty("error").GetString().Should().Be("Subscription is already canceled.");
-        body.Should().NotContain("tenant-guid-here");
+        // The tenant id is embedded in the exception message; it must never leak to the client
+        body.Should().NotContain(tenantId.ToString());
     }
 
     // ─── WebhookSignatureException → 400, no body ────────────────────────────
