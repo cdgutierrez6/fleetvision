@@ -15,6 +15,10 @@ on:
       - '.github/workflows/ci-identity.yml'
       - '.github/workflows/_ci-dotnet.yml'
 
+permissions:
+  contents: read   # least privilege for the reusable build-and-test job
+  packages: write  # required: reusable docker job pushes the image to GHCR
+
 jobs:
   ci:
     uses: ./.github/workflows/_ci-dotnet.yml
