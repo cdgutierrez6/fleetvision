@@ -104,7 +104,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          # github.token (not secrets.GITHUB_TOKEN): in a reusable workflow the `secrets`
+          # context is empty unless the caller passes `secrets: inherit`, so referencing
+          # secrets.GITHUB_TOKEN here made GitHub reject the whole workflow at validation
+          # time (startup_failure) for every service. github.token is always in scope and
+          # is the same automatic token. Push auth still uses `packages: write` above.
+          password: ${{ github.token }}
 
       - name: Docker metadata
         id: meta
