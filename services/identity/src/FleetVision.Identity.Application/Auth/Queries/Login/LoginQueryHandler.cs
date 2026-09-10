@@ -34,9 +34,14 @@ public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, TokenRespons
         var user = await _db.Users
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
-        // Timing-safe: always hash even if user not found to prevent enumeration
-        var dummyHash = "$argon2id$v=19$m=65536,t=3,p=4$invalid";
-        var hashToVerify = user?.PasswordHash ?? dummyHash;
+        // Against user enumeration: when the user does not exist we verify against
+        // DummyHash — a real, valid Argon2id hash with the same cost parameters — so both
+        // branches run the full KDF. This equalises the DOMINANT cost (~tens of ms) and
+        // closes the enumeration oracle; verifying against a malformed literal would fail
+        // in microseconds and leak, via timing, which emails exist. A second-order residual
+        // remains (the indexed Users lookup differs for a hit vs a miss), orders of
+        // magnitude below the KDF and accepted here.
+        var hashToVerify = user?.PasswordHash ?? _passwordHasher.DummyHash;
         var passwordValid = _passwordHasher.Verify(request.Password, hashToVerify);
 
         if (user is null || !passwordValid)

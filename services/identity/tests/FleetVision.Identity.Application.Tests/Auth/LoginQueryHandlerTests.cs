@@ -34,6 +34,7 @@ public sealed class LoginQueryHandlerTests : IDisposable
         _db.Users.Add(_testUser);
         _db.SaveChanges();
 
+        _hasherMock.Setup(h => h.DummyHash).Returns("dummy_argon2_hash");
         _hasherMock.Setup(h => h.Verify("Secure123!", "argon2_hash")).Returns(true);
         _hasherMock.Setup(h => h.Verify(It.IsNotIn("Secure123!"), It.IsAny<string>())).Returns(false);
         _hasherMock.Setup(h => h.Verify(It.IsAny<string>(), It.IsNotIn("argon2_hash"))).Returns(false);
@@ -71,6 +72,11 @@ public sealed class LoginQueryHandlerTests : IDisposable
     {
         var act = async () => await _handler.Handle(new LoginQuery("user@test.com", "WrongPassword"), default);
         await act.Should().ThrowAsync<InvalidCredentialsException>();
+
+        // Symmetry of the timing defense: the existing-user branch also runs Verify exactly
+        // once, against the REAL stored hash. Together with the DummyHash assertion below,
+        // this pins that both branches always pay one KDF — the invariant the defense rests on.
+        _hasherMock.Verify(h => h.Verify("WrongPassword", "argon2_hash"), Times.Once);
     }
 
     [Fact]
@@ -79,6 +85,18 @@ public sealed class LoginQueryHandlerTests : IDisposable
         // Timing-safe: the handler always verifies password even for non-existent users
         var act = async () => await _handler.Handle(new LoginQuery("nobody@test.com", "Secure123!"), default);
         await act.Should().ThrowAsync<InvalidCredentialsException>();
+    }
+
+    [Fact]
+    public async Task Handle_WithNonExistentEmail_ShouldVerifyAgainstDummyHash()
+    {
+        // Anti-enumeration invariant: the non-existent-user branch must run Verify against
+        // the hasher's DummyHash (a real KDF-costing hash), never a malformed literal — so
+        // both branches pay the dominant KDF cost and the enumeration timing oracle is closed.
+        var act = async () => await _handler.Handle(new LoginQuery("nobody@test.com", "Secure123!"), default);
+        await act.Should().ThrowAsync<InvalidCredentialsException>();
+
+        _hasherMock.Verify(h => h.Verify("Secure123!", "dummy_argon2_hash"), Times.Once);
     }
 
     [Fact]
