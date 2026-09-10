@@ -1,0 +1,31 @@
+<Project>
+
+  <!--
+    Repo-wide defaults for .NET TEST projects (any project whose name ends in ".Tests").
+
+    Centralizes the two things that repeatedly drifted per-project and broke CI silently
+    while the .NET CI was down (startup_failure from day one, so no test project ever
+    actually compiled or ran):
+
+      1. <Using Include="Xunit" /> — the xUnit global using. With <ImplicitUsings>enable</>,
+         Xunit is NOT an implicit namespace, so test files that used [Fact]/[Theory] without
+         `using Xunit;` failed with CS0246. Providing it here means no test file needs it.
+
+      2. coverlet.collector 6.0.4 — the coverage data collector, pinned. Version 6.0.3
+         emits an EMPTY cobertura report (lines-valid=0) -> a false 0.0% that fails the
+         >=70% gate even when real tests pass (hit billing & tenant-management). 6.0.0 and
+         6.0.4 both measure correctly; 6.0.4 is the current release. Pinning it centrally
+         stops the version from drifting (repo had 6.0.0 / 6.0.3 / 6.0.4 / missing).
+
+    Individual test .csproj no longer declare these two. Everything else (Microsoft.NET.Test.Sdk,
+    xunit, xunit.runner.visualstudio, per-project package refs) stays in each .csproj.
+  -->
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <Using Include="Xunit" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
