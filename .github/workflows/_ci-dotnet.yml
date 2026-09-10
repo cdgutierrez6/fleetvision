@@ -138,9 +138,10 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ inputs.service-name }}
 
       - name: Trivy vulnerability scan
-        # Tag must carry the 'v' prefix: aquasecurity/trivy-action has no '0.28.0' tag,
-        # only 'v0.28.0' — the bare form fails action resolution at "Set up job".
-        uses: aquasecurity/trivy-action@v0.28.0
+        # v0.28.0 fails to resolve: its bare form has no tag, and even v0.28.0 pins an
+        # internal aquasecurity/setup-trivy@v0.2.1 that no longer exists. Use the current
+        # release, which pins a valid setup-trivy. (Scan is non-blocking: exit-code '0'.)
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ steps.build.outputs.imageid }}
           format: table
