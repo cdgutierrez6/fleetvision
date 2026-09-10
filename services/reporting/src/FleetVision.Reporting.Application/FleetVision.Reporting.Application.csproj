@@ -9,4 +9,7 @@
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="FleetVision.Reporting.Application.Tests" />
+  </ItemGroup>
 </Project>
